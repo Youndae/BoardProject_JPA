@@ -9,9 +9,13 @@ group = 'com.board'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+bootWar {
+    mainClass = 'com.board.project.BoardProjectJpaApplication'
+}
+
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 }
 
@@ -33,19 +37,21 @@ dependencies {
 
     //fileupload
     // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
-    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.2'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    implementation 'commons-io:commons-io:2.11.0'
 
     // for log4jdbc
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3'
 
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }

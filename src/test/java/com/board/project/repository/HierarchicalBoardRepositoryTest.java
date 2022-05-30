@@ -7,14 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class MemberRepositoryTest {
+class HierarchicalBoardRepositoryTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private HierarchicalBoardRepository repository;
 
     @Test
-    void memberTest(){
-        memberRepository.findById("coco");
+    void boardTest(){
+        repository.findAll().forEach(System.out::println);
     }
 
 }
