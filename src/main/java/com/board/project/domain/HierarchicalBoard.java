@@ -1,13 +1,12 @@
 package com.board.project.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -35,6 +34,10 @@ public class HierarchicalBoard {
     private int boardIndent;
 
     private String boardUpperNo;
+
+    @OneToMany(mappedBy = "hierarchicalBoard")
+    @ToString.Exclude
+    private final Set<Comment> comments = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

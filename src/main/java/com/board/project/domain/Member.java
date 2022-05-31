@@ -20,11 +20,15 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
-    private Set<HierarchicalBoard> hierarchicalBoards = new HashSet<>();
+    private final Set<HierarchicalBoard> hierarchicalBoards = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
-    private Set<ImageBoard> imageBoards = new HashSet<>();
+    private final Set<ImageBoard> imageBoards = new HashSet<>();
+
+    @OneToMany(mappedBy = "member")
+    @ToString.Exclude
+    private final Set<Comment> comments = new HashSet<>();
 
     private String userPw;
 
