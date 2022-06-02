@@ -34,7 +34,6 @@ public class ImageBoard {
     private final Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "imageBoard")
-    @ToString.Exclude
     private final Set<ImageData> imageData = new HashSet<>();
 
     @Override

@@ -23,6 +23,7 @@ public class HierarchicalBoard {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
+    @ToString.Exclude
     private Member member;
 
     private String boardContent;

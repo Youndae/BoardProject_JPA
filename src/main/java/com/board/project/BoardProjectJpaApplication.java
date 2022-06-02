@@ -18,4 +18,6 @@ public class BoardProjectJpaApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(BoardProjectJpaApplication.class);
     }
+
+
 }

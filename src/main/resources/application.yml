@@ -15,10 +15,6 @@ spring:
       ddl-auto: none
     generate-ddl: off
     database: mysql
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true
 
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
@@ -33,5 +29,3 @@ server:
 logging:
   file:
     path: logback-spring
-  level:
-    root: WARN
