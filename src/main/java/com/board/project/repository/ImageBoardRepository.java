@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
 
-    /*@Query
-    Page<ImageBoard> imageBoardList(Pageable pageable);*/
+    @Query(value = "SELECT b FROM ImageBoard b")
+    Page<ImageBoard> imageBoardList(Pageable pageable);
 
 }

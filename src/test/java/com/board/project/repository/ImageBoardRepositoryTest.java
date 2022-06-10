@@ -35,7 +35,10 @@ class ImageBoardRepositoryTest {
         if(page > 0)
             page -= 1;
 
-//        Page<ImageBoard> imageBoards = repository.imageBoardList(PageRequest.of(page, amount, Sort.by("imageNo").descending()));
+        Page<ImageBoard> imageBoards = repository.imageBoardList(PageRequest.of(page, amount, Sort.by("imageNo").descending()));
+
+        System.out.println(imageBoards.getContent().get(2).getImageData().getClass().getName());
+
 
     }
 

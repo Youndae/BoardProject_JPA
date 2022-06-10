@@ -36,7 +36,7 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
     Page<HierarchicalBoard> hierarchicalBoardListSearchTitleOrContent(@Param("keyword") String keyword, Pageable pageable);
 
 
-    @Query
+    @Query(value = "SELECT h FROM HierarchicalBoard h")
     Page<HierarchicalBoard> hierarchicalBoardList(Pageable pageable);
 
 
