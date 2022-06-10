@@ -20,6 +20,8 @@ public class ImageBoardRestController {
          * imageNo 받아서 처리
          */
 
+        log.info("rest imageList");
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -29,6 +31,8 @@ public class ImageBoardRestController {
         /**
          * imageList로 이동
          */
+
+        log.info("rest imageInsert");
     }
 
     //이미지 게시판 수정
@@ -37,6 +41,8 @@ public class ImageBoardRestController {
         /**
          * imageDetail로 이동
          */
+
+        log.info("rest imageModify");
     }
 
     //이미지 게시판 삭제
@@ -46,6 +52,8 @@ public class ImageBoardRestController {
          * imageNo 받아서 처리
          * 처리 후 imageList로 이동
          */
+
+        log.info("rest imageDelete");
     }
 
 

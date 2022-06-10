@@ -15,6 +15,8 @@ public class HierarchicalBoardRestController {
         /**
          * insert 처리 후 boardList로 이동
          */
+
+        log.info("rest boardInsert");
     }
 
     //게시글 수정 처리
@@ -23,6 +25,8 @@ public class HierarchicalBoardRestController {
         /**
          * update 처리 후 boardDetail로 이동
          */
+
+        log.info("rest boardModify");
     }
 
     //게시글 삭제 처리
@@ -31,6 +35,8 @@ public class HierarchicalBoardRestController {
         /**
          * 삭제 처리 후 boardList로 이동
          */
+
+        log.info("rest boardDelete");
     }
 
     //게시글 답글 작성 처리
@@ -39,5 +45,7 @@ public class HierarchicalBoardRestController {
         /**
          * 답글 작성 처리 후 boardList로 이동
          */
+
+        log.info("rest boardReply");
     }
 }

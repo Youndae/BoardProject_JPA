@@ -15,7 +15,7 @@ public class HierarchicalBoardController {
     //계층형 게시판 리스트(메인)
     @GetMapping("/boardList")
     public void hierarchicalBoardMain(Model model){
-
+        log.info("boardList");
     }
 
     //계층형 게시판 상세페이지
@@ -24,6 +24,7 @@ public class HierarchicalBoardController {
         /**
          * boardNo 받아서 처리
          */
+        log.info("boardDetail");
     }
 
     //계층형 게시판 수정페이지
@@ -32,12 +33,13 @@ public class HierarchicalBoardController {
         /**
          * boardNo 받아서 처리
          */
+        log.info("boardModify");
     }
 
     //계층형 게시판 글작성
     @GetMapping("/boardInsert")
     public void hierarchicalBoardInsert(){
-
+        log.info("boardInsert");
     }
 
     //계층형 게시판 답글 작성
@@ -46,6 +48,7 @@ public class HierarchicalBoardController {
         /**
          * boardNo 받아서 처리
          */
+        log.info("boardReply");
     }
 
 }

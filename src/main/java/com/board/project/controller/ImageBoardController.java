@@ -30,12 +30,14 @@ public class ImageBoardController {
         /**
          * boardNo 받아서 처리
          */
+
+        log.info("imageDetail");
     }
 
     //이미지 게시판 작성
     @GetMapping("/imageBoardInsert")
     public void imageBoardInsert(){
-
+        log.info("image insert");
     }
 
     //이미지 게시판 수정
@@ -44,12 +46,8 @@ public class ImageBoardController {
         /**
          * boardNo 받아서 처리
          */
+
+        log.info("image modify");
     }
-
-
-
-
-
-
 
 }
