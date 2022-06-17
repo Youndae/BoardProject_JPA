@@ -1,8 +1,8 @@
 spring:
   thymeleaf:
-    cache: false
     prefix: classpath:/templates/
     suffix: .html
+    cache: false
     view-names: th/*
   jpa:
     show-sql: true
@@ -15,6 +15,10 @@ spring:
       ddl-auto: none
     generate-ddl: off
     database: mysql
+
+  devtools:
+    livereload:
+      enabled: true
 
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

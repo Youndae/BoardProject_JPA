@@ -11,7 +11,14 @@ import java.util.List;
 
 public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalBoard, Long> {
 
-    //HierarchicalBoard default List And SerchTitle List
+    //HierarchicalBoard default List
+    @Query(value = "SELECT boardNo, concat(repeat('   ', boardIndent), '', boardTitle) AS boardTitle, userId, boardContent, boardDate, boardGroupNo, boardUpperNo, boardIndent FROM hierarchicalBoard"
+            , countQuery = "SELECT count(*) FROM hierarchicalBoard"
+            , nativeQuery = true)
+    Page<HierarchicalBoard> hierarchicalBoardList(Pageable pageable);
+
+
+    //HierarchicalBoard SearchTitle List
     @Query(value = "SELECT boardNo, concat(repeat('   ', boardIndent), '', boardTitle) AS boardTitle, userId, boardContent, boardDate, boardGroupNo, boardUpperNo, boardIndent FROM hierarchicalBoard WHERE boardTitle LIKE :keyword"
             , countQuery = "SELECT count(*) FROM hierarchicalBoard WHERE boardTitle LIKE :keyword"
             , nativeQuery = true)
@@ -34,10 +41,6 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
             , countQuery = "SELECT count(*) FROM hierarchicalBoard WHERE boardTitle LIKE :keyword or boardContent LIKE :keyword"
             , nativeQuery = true)
     Page<HierarchicalBoard> hierarchicalBoardListSearchTitleOrContent(@Param("keyword") String keyword, Pageable pageable);
-
-
-    @Query(value = "SELECT h FROM HierarchicalBoard h")
-    Page<HierarchicalBoard> hierarchicalBoardList(Pageable pageable);
 
 
 }
