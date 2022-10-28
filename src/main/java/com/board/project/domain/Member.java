@@ -1,13 +1,12 @@
 package com.board.project.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +19,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
-    private final Set<HierarchicalBoard> hierarchicalBoards = new HashSet<>();
+    private List<HierarchicalBoard> hierarchicalBoards;
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
@@ -33,4 +32,11 @@ public class Member {
     private String userPw;
 
     private String userName;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Auth> auths;
+
+
+
 }

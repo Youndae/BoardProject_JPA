@@ -1,5 +1,6 @@
 package com.board.project.repository;
 
+import com.board.project.domain.Auth;
 import com.board.project.domain.HierarchicalBoard;
 import com.board.project.domain.Member;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +38,7 @@ class HierarchicalBoardRepositoryTest {
     }
 
 
-    @Test
+   /* @Test
     void pagingTest(){
         //컨트롤러에서 받을 값
         int page = 0;
@@ -61,7 +62,7 @@ class HierarchicalBoardRepositoryTest {
         System.out.println("This page number : " + boardData.getNumber());
         System.out.println("all Page Count : " + boardData.getTotalPages());
 
-    }
+    }*/
 
     @Test
     void pagingSearchTest(){
@@ -102,7 +103,7 @@ class HierarchicalBoardRepositoryTest {
                 .boardIndent(0)
                 .boardGroupNo(1L)
                 .boardUpperNo("1")
-                .member(new Member("coco", "1234", "코코"))
+//                .member(new Member("coco", "1234", "코코"))
                 .build());
 
         assertEquals(hierarchicalBoard, repository.findById(boardNo));

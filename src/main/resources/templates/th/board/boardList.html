@@ -13,9 +13,9 @@
 <div layout:fragment="content">
     <div class="container">
         <div class="form-row float-right mb-1">
-
+            <button class="btn btn-outline-info btn-sm" onclick="location.href='/board/boardInsert'">글작성</button>
         </div>
-        <!--<table class="table table-hover">
+        <table class="table table-hover">
             <tr>
                 <th>글번호</th>
                 <th>글제목</th>
@@ -30,8 +30,7 @@
                     <td th:text="${board.boardDate}"/>
                 </tr>
             </th:block>
-        </table>-->
-        boardList page
+        </table>
     </div>
 </div>
 </body>

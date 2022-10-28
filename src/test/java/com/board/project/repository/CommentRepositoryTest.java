@@ -14,12 +14,12 @@ class CommentRepositoryTest {
     @Autowired
     private CommentRepository repository;
 
-    @Test
+    /*@Test
     void commentTest(){
         repository.findAll().forEach(System.out::println);
-    }
+    }*/
 
-    @Test
+    /*@Test
     void boardCommentTest(){
         String boardNo = "1";
         String boardType = "image";
@@ -33,6 +33,6 @@ class CommentRepositoryTest {
             repository.hierarchicalCommentList(boardNo, PageRequest.of(page, amount, Sort.by("commentGroupNo").descending().and(Sort.by("commentUpperNo").ascending())));
         else if(boardType == "image")
             repository.imageCommentList(boardNo, PageRequest.of(page, amount, Sort.by("commentGroupNo").descending().and(Sort.by("commentUpperNo").ascending())));
-    }
+    }*/
 
 }

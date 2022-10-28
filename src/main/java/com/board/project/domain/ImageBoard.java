@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @AllArgsConstructor
@@ -21,20 +19,21 @@ public class ImageBoard {
 
     private String imageTitle;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
+    @ToString.Exclude
     private Member member;
 
     private Date imageDate;
 
     private String imageContent;
 
-    @OneToMany(mappedBy = "imageBoard")
+    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY)
     @ToString.Exclude
     private final Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "imageBoard")
-    private final Set<ImageData> imageData = new HashSet<>();
+    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY)
+    private final List<ImageData> imageData = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

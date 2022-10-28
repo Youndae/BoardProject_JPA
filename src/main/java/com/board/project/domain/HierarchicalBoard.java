@@ -21,7 +21,7 @@ public class HierarchicalBoard {
 
     private String boardTitle;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userId")
     @ToString.Exclude
     private Member member;

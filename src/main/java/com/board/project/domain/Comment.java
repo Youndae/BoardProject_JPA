@@ -18,6 +18,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @ToString.Exclude
     private Member member;
 
     private Date commentDate;
@@ -32,10 +33,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "imageNo")
+    @ToString.Exclude
     private ImageBoard imageBoard;
 
     @ManyToOne
     @JoinColumn(name = "boardNo")
+    @ToString.Exclude
     private HierarchicalBoard hierarchicalBoard;
 
 }

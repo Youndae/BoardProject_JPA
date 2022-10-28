@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.security.Principal;
 
 @Controller
 @Slf4j
@@ -23,10 +27,10 @@ public class HierarchicalBoardController {
 
 
     //계층형 게시판 리스트(메인)
-    @GetMapping("/boardList")
+    @RequestMapping(method = RequestMethod.GET, value = "/boardList")
     public String hierarchicalBoardMain(Model model, Criteria cri) {
 
-        /*if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
+        if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
             model.addAttribute("boardList",
                     repository.hierarchicalBoardList(
                             PageRequest.of(cri.getPageNum()
@@ -65,7 +69,7 @@ public class HierarchicalBoardController {
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
-        }*/
+        }
 
 
         log.info("boardList log");
@@ -75,11 +79,18 @@ public class HierarchicalBoardController {
 
     //계층형 게시판 상세페이지
     @GetMapping("/boardDetail")
-    public void hierarchicalBoardDetail(Model model) {
+    public String hierarchicalBoardDetail(Model model, Principal principal) {
         /**
          * boardNo 받아서 처리
          */
         log.info("boardDetail");
+
+        if(principal == null)
+            log.info("Principal is null");
+        else if(principal != null)
+            log.info("Principal is not null " + principal.getName());
+
+        return "th/board/boardDetail";
     }
 
     //계층형 게시판 수정페이지
