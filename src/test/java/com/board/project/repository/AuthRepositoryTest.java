@@ -10,8 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class AuthRepositoryTest {
 
-    @Autowired
-    private AuthRepository repository;
+
 
     @Test
     void authTest(){

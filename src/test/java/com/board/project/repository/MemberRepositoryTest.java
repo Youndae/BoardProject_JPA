@@ -33,12 +33,15 @@ class MemberRepositoryTest {
     void loginTest(){
 //        System.out.println(memberRepository.findById("coco"));
 
+        Member member = memberRepository.findByUserId("coco");
 //        MemberAuthDTO member = memberRepository.userInfo2("coco");
 
-        Member member = memberRepository.userInfo("coco");
+//        Member member = memberRepository.userInfo("coco");
 
         System.out.println("-------------------");
         System.out.println("member is : " + member);
+
+//        member.getAuths().forEach(auth -> System.out.println(auth));
 
 
 

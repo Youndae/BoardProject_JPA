@@ -43,4 +43,5 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
     Page<HierarchicalBoard> hierarchicalBoardListSearchTitleOrContent(@Param("keyword") String keyword, Pageable pageable);
 
 
+    HierarchicalBoard findByBoardNo(long boardNo);
 }

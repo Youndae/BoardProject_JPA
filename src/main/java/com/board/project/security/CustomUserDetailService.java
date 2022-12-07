@@ -34,9 +34,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
         log.info("CustomUserDetailService");
 
-        Member member = repository.userInfo(username);
+//        Member member = repository.userInfo(username);
 
-//        Member member = repository.findByUserId(username);
+        Member member = repository.findByUserId(username);
 
 
 //        Member member = authRepository.findByUserId("coco");

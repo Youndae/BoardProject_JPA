@@ -93,3 +93,17 @@
 >> 
 >> 그리고 findById와 imageDetail 메소드로 테스트를 진행했을때는 쿼리문에 imageStep asc로 정렬을 하도록 해도 제대로 정렬되지 않았는데   
 >> DTO로 처리하니까 정렬도 잘된다...
+> 
+> 수정 내역.
+> html 파일 작성
+> 회원가입과 로그인 구현
+> 
+> 남은 처리내역
+> boardDetail
+> boardInsert
+> boardModify
+> boardReply
+> 
+> imageBoardDetail
+> ImageBoardInsert
+> ImageBoardModify

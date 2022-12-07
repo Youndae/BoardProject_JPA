@@ -32,6 +32,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             log.info("Success Authentication : " + authority.getAuthority());
         });
 
-        response.sendRedirect("/board/boardDetail");
+        response.sendRedirect("/board/boardList");
     }
 }

@@ -84,17 +84,19 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/", "/login/**", "/resources/**", "/css/**", "/js/**")
                 .permitAll()
-                .and()
+            .and()
                 .formLogin()
+                .loginPage("/member/loginForm")
                 .usernameParameter("userId")
                 .passwordParameter("userPw")
                 .successHandler(loginSuccessHandler())
-                .and()
+                .loginProcessingUrl("/login")
+            .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/board/boardList")
                 .invalidateHttpSession(true)
-                .and()
+            .and()
                 .exceptionHandling().accessDeniedPage("/");
 
         return http.build();
@@ -107,7 +109,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }

@@ -35,4 +35,14 @@ class CommentRepositoryTest {
             repository.imageCommentList(boardNo, PageRequest.of(page, amount, Sort.by("commentGroupNo").descending().and(Sort.by("commentUpperNo").ascending())));
     }*/
 
+    @Test
+    void commentTest(){
+        long boardNo = 99988L;
+        int pageNum = 0;
+        int amount = 20;
+
+        System.out.println(repository.hierarchicalCommentList(boardNo, PageRequest.of(pageNum, amount, Sort.by("commentGroupNo").descending()
+                .and(Sort.by("commentUpperNo").ascending()))));
+
+    }
 }

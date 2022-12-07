@@ -25,7 +25,12 @@
             <th:block th:each="board : ${boardList}" th:border="1">
                 <tr>
                     <td th:text="${board.boardNo}"/>
-                    <td th:text="${board.boardTitle}"/>
+<!--                    <td th:text="${board.boardTitle}"/>-->
+                    <td>
+                        <span>
+                            <a th:href="@{/board/boardDetail/{boardNo}(boardNo=${board.boardNo})}" th:text="${board.boardTitle}"></a>
+                        </span>
+                    </td>
                     <td th:text="${board.member.userId}"></td>
                     <td th:text="${board.boardDate}"/>
                 </tr>

@@ -1,7 +1,10 @@
 package com.board.project.controller;
 
+import com.board.project.domain.Comment;
 import com.board.project.domain.Criteria;
+import com.board.project.repository.CommentRepository;
 import com.board.project.repository.HierarchicalBoardRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +14,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @Controller
 @Slf4j
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class HierarchicalBoardController {
 
-    @Autowired
-    private HierarchicalBoardRepository repository;
+
+    private final HierarchicalBoardRepository hierarchicalBoardRepository;
+
+    private final CommentRepository commentRepository;
 
 
     //계층형 게시판 리스트(메인)
@@ -32,14 +36,14 @@ public class HierarchicalBoardController {
 
         if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
             model.addAttribute("boardList",
-                    repository.hierarchicalBoardList(
+                    hierarchicalBoardRepository.hierarchicalBoardList(
                             PageRequest.of(cri.getPageNum()
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
         } else if (cri.getSearchType() == "t") {//title 검색시 사용
             model.addAttribute("boardList",
-                    repository.hierarchicalBoardListSearchTitle(
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitle(
                             cri.getKeyword()
                             , PageRequest.of(cri.getPageNum()
                                     , cri.getAmount()
@@ -47,7 +51,7 @@ public class HierarchicalBoardController {
                                             .and(Sort.by("boardUpperNo").ascending()))));
         } else if (cri.getSearchType() == "c") {//content 검색시 사용
             model.addAttribute("boardList",
-                    repository.hierarchicalBoardListSearchContent(
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchContent(
                             cri.getKeyword()
                             , PageRequest.of(cri.getPageNum()
                                     , cri.getAmount()
@@ -55,7 +59,7 @@ public class HierarchicalBoardController {
                                             .and(Sort.by("boardUpperNo").ascending()))));
         } else if (cri.getSearchType() == "u") {// user 검색 시 사용
             model.addAttribute("boardList",
-                    repository.hierarchicalBoardListSearchUser(
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchUser(
                             cri.getKeyword()
                             , PageRequest.of(cri.getPageNum()
                                     , cri.getAmount()
@@ -63,7 +67,7 @@ public class HierarchicalBoardController {
                                             .and(Sort.by("boardUpperNo").ascending()))));
         } else if (cri.getKeyword() == "tc") {// title and content 검색시 사용
             model.addAttribute("boardList",
-                    repository.hierarchicalBoardListSearchTitleOrContent(
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitleOrContent(
                             cri.getKeyword()
                             , PageRequest.of(cri.getPageNum()
                                     , cri.getAmount()
@@ -78,17 +82,41 @@ public class HierarchicalBoardController {
     }
 
     //계층형 게시판 상세페이지
-    @GetMapping("/boardDetail")
-    public String hierarchicalBoardDetail(Model model, Principal principal) {
+    @GetMapping("/boardDetail/{boardNo}")
+    public String hierarchicalBoardDetail(Model model
+                                    , Principal principal
+                                    , @PathVariable long boardNo
+                                    , @ModelAttribute("comment")Comment comment
+                                    , Criteria criteria) {
         /**
          * boardNo 받아서 처리
          */
         log.info("boardDetail");
 
-        if(principal == null)
+        log.info("boardNo : " + boardNo);
+
+        model.addAttribute("boardDetail", hierarchicalBoardRepository.findByBoardNo(boardNo));
+        model.addAttribute("comment", commentRepository.hierarchicalCommentList(boardNo
+                                                        , PageRequest.of(criteria.getPageNum() - 1
+                                                                , criteria.getAmount()
+                                                                , Sort.by("commentGroupNo").descending()
+                                                                                .and(Sort.by("commentUpperNo").ascending()))));
+
+        /*if(principal == null)
             log.info("Principal is null");
         else if(principal != null)
-            log.info("Principal is not null " + principal.getName());
+            log.info("Principal is not null " + principal.getName());*/
+
+        log.info("getPageNum : " + criteria.getPageNum());
+        log.info("getAmount : " + criteria.getAmount());
+
+        log.info("comment : " + commentRepository.hierarchicalCommentList(boardNo
+                , PageRequest.of(criteria.getPageNum() - 1
+                        , criteria.getAmount()
+                        , Sort.by("commentGroupNo").descending()
+                                .and(Sort.by("commentUpperNo").ascending()))));
+
+
 
         return "th/board/boardDetail";
     }

@@ -39,7 +39,7 @@ public class CustomUser extends User {
                 new SimpleGrantedAuthority(auth.getAuth())).collect(Collectors.toList()));
 
         log.info("custom user ");
-        log.info("info : " + member.getUserId() + ", authList : " + member.getAuths());
+//        log.info("info : " + member.getUserId() + ", authList : " + member.getAuths());
 
         this.member = member;
     }

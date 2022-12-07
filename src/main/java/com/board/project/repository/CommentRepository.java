@@ -10,10 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "SELECT * from comment WHERE boardNo = :boardNo"
+    @Query(value = "SELECT commentNo, userId, commentDate, commentContent, commentGroupNo, commentIndent, commentUpperNo, boardNo, imageNo from comment WHERE boardNo = :boardNo"
             , countQuery = "SELECT count(*) FROM comment WHERE boardNo = :boardNo"
             , nativeQuery = true)
-    Page<Comment> hierarchicalCommentList(@Param("boardNo") String boardNo, Pageable pageable);
+    Page<Comment> hierarchicalCommentList(@Param("boardNo") long boardNo, Pageable pageable);
 
     @Query(value = "SELECT * from comment WHERE imageNo = :boardNo"
             , countQuery = "SELECT count(*) FROM comment WHERE imageNo = :boardNo"
