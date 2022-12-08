@@ -2,6 +2,7 @@ package com.board.project.controller;
 
 import com.board.project.domain.Comment;
 import com.board.project.domain.Criteria;
+import com.board.project.domain.PageDTO;
 import com.board.project.repository.CommentRepository;
 import com.board.project.repository.HierarchicalBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -115,6 +116,10 @@ public class HierarchicalBoardController {
                         , criteria.getAmount()
                         , Sort.by("commentGroupNo").descending()
                                 .and(Sort.by("commentUpperNo").ascending()))));
+
+        int total = commentRepository.countComment(boardNo);
+
+        model.addAttribute("pageMaker", new PageDTO(criteria, total));
 
 
 

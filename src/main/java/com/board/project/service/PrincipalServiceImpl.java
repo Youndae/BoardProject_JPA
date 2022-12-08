@@ -1,5 +1,6 @@
 package com.board.project.service;
 
+import com.board.project.domain.Member;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -8,7 +9,15 @@ import java.security.Principal;
 public class PrincipalServiceImpl implements PrincipalService{
 
     @Override
-    public void checkPrincipal(Principal principal) throws Exception {
+    public Member checkPrincipal(Principal principal) throws Exception {
+
+        try{
+            Member member = new Member();
+            member.setUserId(principal.getName());
+            return member;
+        }catch (Exception e){
+            return null;
+        }
 
     }
 }
