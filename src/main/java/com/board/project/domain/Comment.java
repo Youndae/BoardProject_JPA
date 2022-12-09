@@ -29,7 +29,7 @@ public class Comment {
 
     private int commentIndent;
 
-    private Long commentUpperNo;
+    private String commentUpperNo;
 
     @ManyToOne
     @JoinColumn(name = "imageNo")

@@ -3,14 +3,11 @@ package com.board.project.service;
 import com.board.project.domain.Comment;
 import com.board.project.domain.HierarchicalBoard;
 import com.board.project.domain.ImageBoard;
-import com.board.project.domain.Member;
 import com.board.project.repository.CommentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Map;
@@ -31,7 +28,10 @@ public class CommentServiceImpl implements CommentService{
 
         try{
             comment = checkBoard(commentData, comment);
-            comment.setCommentGroupNo(commentRepository.maxCommentNo());
+            long maxNo = commentRepository.maxCommentNo();
+            comment.setCommentGroupNo(maxNo);
+            comment.setCommentUpperNo(String.valueOf(maxNo));
+
 
             commentRepository.save(comment);
 
@@ -42,11 +42,6 @@ public class CommentServiceImpl implements CommentService{
             return 2;
         }
 
-
-
-
-
-
     }
 
     @Override
@@ -56,7 +51,8 @@ public class CommentServiceImpl implements CommentService{
             comment = checkBoard(commentData, comment);
             comment.setCommentGroupNo(Long.parseLong(commentData.get("commentGroupNo").toString()));
             comment.setCommentIndent(Integer.parseInt(commentData.get("commentIndent").toString()) + 1);
-            comment.setCommentUpperNo(Long.parseLong(commentData.get("commentNo").toString()));
+            long maxNo = commentRepository.maxCommentNo();
+            comment.setCommentUpperNo(commentData.get("commentUpperNo").toString() + "," + maxNo);
 
             commentRepository.save(comment);
 
@@ -87,7 +83,15 @@ public class CommentServiceImpl implements CommentService{
         return comment;
     }
 
+    @Override
+    public int commentDelete(Comment comment) throws Exception {
 
+        try{
+            commentRepository.deleteById(comment.getCommentNo());
+            return 1;
+        }catch (Exception e){
+            return 0;
+        }
 
-
+    }
 }

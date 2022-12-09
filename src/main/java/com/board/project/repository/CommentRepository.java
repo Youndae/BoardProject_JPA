@@ -8,23 +8,53 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "SELECT commentNo, userId, commentDate, commentContent, commentGroupNo, commentIndent, commentUpperNo, boardNo, imageNo from comment WHERE boardNo = :boardNo"
-            , countQuery = "SELECT count(*) FROM comment WHERE boardNo = :boardNo"
-            , nativeQuery = true)
-    Page<Comment> hierarchicalCommentList(@Param("boardNo") long boardNo, Pageable pageable);
+    @Query(value = "SELECT commentNo" +
+            ", CONCAT(REPEAT('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', commentIndent), '', commentContent) AS commentContent" +
+            ", userId" +
+            ", commentDate" +
+            ", commentGroupNo" +
+            ", commentIndent" +
+            ", commentUpperNo" +
+            ", imageNo" +
+            ", boardNo " +
+            "FROM comment " +
+            "WHERE boardNo = :boardNo",
+            countQuery = "SELECT count(*) FROM comment WHERE boardNo = :boardNo",
+            nativeQuery = true)
+    Page<Comment> hierarchicalCommentList(@Param("boardNo")long boardNo, Pageable pageable);
 
-    @Query(value = "SELECT * from comment WHERE imageNo = :boardNo"
-            , countQuery = "SELECT count(*) FROM comment WHERE imageNo = :boardNo"
-            , nativeQuery = true)
-    Page<Comment> imageCommentList(@Param("boardNo") String boardNo, Pageable pageable);
+    @Query(value = "SELECT commentNo" +
+            ", CONCAT(REPEAT('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', commentIndent), '', commentContent) AS commentContent" +
+            ", userId" +
+            ", commentDate" +
+            ", commentGroupNo" +
+            ", commentIndent" +
+            ", commentUpperNo" +
+            ", imageNo" +
+            ", boardNo " +
+            "FROM comment " +
+            "WHERE imageNo = :boardNo",
+        countQuery = "SELECT count(*) FROM comment WHERE imageNo = :boardNo",
+        nativeQuery = true)
+    Page<Comment> imageCommentList(@Param("boardNo")long boardNo, Pageable pageable);
 
-    @Query(value = "SELECT count(*) FROM comment WHERE boardNo = :boardNo"
+    @Query(value = "SELECT count(*) " +
+            "FROM comment " +
+            "WHERE boardNo = :boardNo"
             , nativeQuery = true)
     int countComment(@Param("boardNo") long boardNo);
 
-    @Query(value = "SELECT ifnull(max(commentNo) + 1, 1) FROM comment",
+    @Query(value = "SELECT ifnull(max(commentNo) + 1, 1) " +
+            "FROM comment",
         nativeQuery = true)
     long maxCommentNo();
+
+
+
 }

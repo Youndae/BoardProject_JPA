@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
@@ -88,7 +89,8 @@ public class HierarchicalBoardController {
                                     , Principal principal
                                     , @PathVariable long boardNo
                                     , @ModelAttribute("comment")Comment comment
-                                    , Criteria criteria) {
+                                    , Criteria criteria
+                                    , HttpSession session) {
         /**
          * boardNo 받아서 처리
          */
@@ -96,11 +98,14 @@ public class HierarchicalBoardController {
 
         log.info("boardNo : " + boardNo);
 
+        if(principal != null)
+            session.setAttribute("userId", principal.getName());
+
         model.addAttribute("boardDetail", hierarchicalBoardRepository.findByBoardNo(boardNo));
         model.addAttribute("comment", commentRepository.hierarchicalCommentList(boardNo
                                                         , PageRequest.of(criteria.getPageNum() - 1
                                                                 , criteria.getAmount()
-                                                                , Sort.by("commentGroupNo").descending()
+                                                                , Sort.by("commentGroupNo").ascending()
                                                                                 .and(Sort.by("commentUpperNo").ascending()))));
 
         /*if(principal == null)
@@ -127,12 +132,17 @@ public class HierarchicalBoardController {
     }
 
     //계층형 게시판 수정페이지
-    @GetMapping("/boardModify")
-    public void hierarchicalBoardModify(Model model) {
+    @GetMapping("/boardModify/{boardNo}")
+    public String hierarchicalBoardModify(Model model, @PathVariable long boardNo) {
         /**
          * boardNo 받아서 처리
          */
+
+        model.addAttribute("boardModify", hierarchicalBoardRepository.findByBoardNo(boardNo));
+
         log.info("boardModify");
+
+        return "th/board/boardModify";
     }
 
     //계층형 게시판 글작성

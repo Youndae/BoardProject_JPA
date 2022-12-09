@@ -5,6 +5,7 @@ import com.board.project.domain.Comment;
 import com.board.project.domain.Member;
 import com.board.project.service.CommentService;
 import com.board.project.service.PrincipalService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,14 @@ public class CommentRestController {
 
     //댓글 삭제
     @DeleteMapping("/commentDelete")
-    public void commentDelete(){
+    @ResponseBody
+    public int commentDelete(@RequestBody String commentNo) throws Exception{
         log.info("comment Delete");
+
+        ObjectMapper om = new ObjectMapper();
+        Comment comment = om.readValue(commentNo, Comment.class);
+        log.info("commentNo : "+ comment.getCommentNo());
+
+        return commentService.commentDelete(comment);
     }
 }

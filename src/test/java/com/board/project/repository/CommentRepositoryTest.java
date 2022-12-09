@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -41,8 +43,20 @@ class CommentRepositoryTest {
         int pageNum = 0;
         int amount = 20;
 
-        System.out.println(repository.hierarchicalCommentList(boardNo, PageRequest.of(pageNum, amount, Sort.by("commentGroupNo").ascending()
-                .and(Sort.by("commentUpperNo").ascending()))));
+        /*System.out.println(repository.commentTest(boardNo, PageRequest.of(pageNum, amount, Sort.by("commentGroupNo").ascending()
+                .and(Sort.by("commentUpperNo").ascending()))));*/
+
+
+
+
+//        repository.commentTest2(boardNo);
+
+        repository.hierarchicalCommentList(boardNo, PageRequest.of(pageNum, amount
+                    ,Sort.by("commentGroupNo").ascending()
+                        .and(Sort.by("commentUpperNo").ascending())));
+
+
+
 
     }
 }
