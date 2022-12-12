@@ -134,6 +134,28 @@
 > 게시글 수정 구현중.
 >   페이지 구현까지 완료. 수정 등록 구현 해야함.
 > 
+> 22/12/12
+> 계층형 게시판 게시글 등록, 수정, 답글 구현중.
+> 
+> thymeleaf에서 csrf토큰을 form에 담을 때 form action을 th:action으로 쓰면 thymeleaf가 form안에 csrf 토큰을 넣어준다.
+> 
+> PutMapping과 DeleteMapping으로 요청할 때 form 데이터를 넘겨주면 설정을 다르게 해줘야 한다.   
+> form은 get과 post방식만 기본적으로 지원하기 때문에 put와 delete로 설정할 수 없다.   
+> 그래서 form 안에 input을 통해 method 처리를 하게 되면 put과 delete를 사용할 수 있다.   
+> \<input type="hidden" name="_method" value="put"/>\
+>  thymeleaf에서는 form 태그에서 method="" 설정 대신 th:method="put" 으로 설정하게 되면   
+> thymeleaf가 알아서 input을 추가해주게 된다.   
+> 그리고 이렇게 사용하기 위해서는 한가지를 더 추가해야 한다.   
+> hiddenmethod 옵션을 추가해줘야 하는데 yml, properties에 추가하는 방법이 있고
+> Bean으로 등록하는 방법이 있다.   
+> spring.mvc.hiddenmethod.filter.enabled: true   
+> springBoot에서는 이렇게 설정해주면 되고 bean으로 등록할때는    
+> @Bean   
+> public HiddenHttpMethodFilter hiddenHttpMethodFilter(){   
+> return new HiddenHttpMethodFilter();   
+> }   
+> 이렇게 HiddenHttpMethodFilter를 bean으로 등록해주면 된다.   
+> yml에서 설정을 하고자 했지만 이상하게 계속 오류가 발생해서 bean으로 등록해서 처리.
 > 
 > 
 > 

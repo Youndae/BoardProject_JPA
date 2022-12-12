@@ -147,17 +147,23 @@ public class HierarchicalBoardController {
 
     //계층형 게시판 글작성
     @GetMapping("/boardInsert")
-    public void hierarchicalBoardInsert() {
+    public String hierarchicalBoardInsert() {
         log.info("boardInsert");
+
+        return "th/board/boardInsert";
     }
 
     //계층형 게시판 답글 작성
-    @GetMapping("/boardReply")
-    public void hierarchicalBoardReply(Model model) {
+    @GetMapping("/boardReply/{boardNo}")
+    public String hierarchicalBoardReply(Model model, @PathVariable long boardNo) {
         /**
          * boardNo 받아서 처리
          */
         log.info("boardReply");
+
+        model.addAttribute("boardReply", hierarchicalBoardRepository.findByBoardNo(boardNo));
+
+        return "th/board/boardReply";
     }
 
 }

@@ -4,9 +4,11 @@ import com.board.project.domain.HierarchicalBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalBoard, Long> {
@@ -44,4 +46,16 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
 
 
     HierarchicalBoard findByBoardNo(long boardNo);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE hierarchicalBoard SET boardTitle = :boardTitle, boardContent = :boardContent WHERE boardNo = :boardNo",
+    nativeQuery = true)
+    void boardModify(@Param("boardTitle") String boardTitle, @Param("boardContent") String boardContent, @Param("boardNo") long boardNo);
+
+
+    @Query(value = "SELECT ifnull(max(boardNo) + 1, 1) " +
+            "FROM hierarchicalBoard",
+            nativeQuery = true)
+    long maxBoardNo();
 }

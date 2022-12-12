@@ -13,12 +13,23 @@
     <script>
         var token = $("meta[name='_csrf']").attr('content');
         var header = $("meta[name='_csrf_header']").attr('content');
+
+        $(document).ready(function(){
+            $("#modifyProc").on('click', function(){
+                var form = $("#insertBoardFrm");
+
+                console.log("modify btn click");
+
+                // form.attr('action', '/board/boardModify');
+                form.submit();
+            })
+        })
     </script>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <form id="insertBoardFrm" method="post">
+        <form id="insertBoardFrm" th:action="@{/board/boardModify}" th:method="put">
             <div>
                 <label for="boardTitle">제목</label>
                 <input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 입력하세요" th:value="${boardModify.boardTitle}">
