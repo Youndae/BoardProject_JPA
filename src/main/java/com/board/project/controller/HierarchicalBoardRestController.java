@@ -41,8 +41,8 @@ public class HierarchicalBoardRestController {
         log.info("content : " + request.getParameter("boardContent"));
 
 
-//        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
-//        hierarchicalBoardService.insertBoard(hierarchicalBoard, request);
+        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
+        hierarchicalBoardService.insertBoard(hierarchicalBoard, request);
 
         return "redirect:/board/boardList";
 
@@ -86,7 +86,7 @@ public class HierarchicalBoardRestController {
         HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
         log.info("boardNo : " + hierarchicalBoard.getBoardNo());
 
-//        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
+        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
     }
 
     //게시글 답글 작성 처리
@@ -103,7 +103,7 @@ public class HierarchicalBoardRestController {
         log.info("groupNo : " + request.getParameter("boardGroupNo"));
         log.info("upperNo : " + request.getParameter("boardUpperNo"));
 
-//        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
-//        hierarchicalBoardService.insertBoardReply(hierarchicalBoard, request);
+        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
+        hierarchicalBoardService.insertBoardReply(hierarchicalBoard, request);
     }
 }

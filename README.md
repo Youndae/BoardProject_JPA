@@ -157,6 +157,7 @@
 > 이렇게 HiddenHttpMethodFilter를 bean으로 등록해주면 된다.   
 > yml에서 설정을 하고자 했지만 이상하게 계속 오류가 발생해서 bean으로 등록해서 처리.
 > 
+> insert, delete, replyInsert save 코드 추가.
 > 
 > 
 > 
