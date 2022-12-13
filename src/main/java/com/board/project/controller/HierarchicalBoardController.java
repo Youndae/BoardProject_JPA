@@ -122,7 +122,7 @@ public class HierarchicalBoardController {
                         , Sort.by("commentGroupNo").descending()
                                 .and(Sort.by("commentUpperNo").ascending()))));
 
-        int total = commentRepository.countComment(boardNo);
+        int total = commentRepository.countBoardComment(boardNo);
 
         model.addAttribute("pageMaker", new PageDTO(criteria, total));
 
@@ -147,6 +147,7 @@ public class HierarchicalBoardController {
 
     //계층형 게시판 글작성
     @GetMapping("/boardInsert")
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String hierarchicalBoardInsert() {
         log.info("boardInsert");
 
@@ -155,6 +156,7 @@ public class HierarchicalBoardController {
 
     //계층형 게시판 답글 작성
     @GetMapping("/boardReply/{boardNo}")
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String hierarchicalBoardReply(Model model, @PathVariable long boardNo) {
         /**
          * boardNo 받아서 처리

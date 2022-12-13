@@ -8,6 +8,7 @@ import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +67,7 @@ public class HierarchicalBoardRestController {
         long boardNo = Long.parseLong(request.getParameter("boardNo"));
 
 
-        hierarchicalBoardRepository.boardModify(boardTitle, boardContent, boardNo);
+//        hierarchicalBoardRepository.boardModify(boardTitle, boardContent, boardNo);
 
         return "redirect:/board/boardDetail/"+boardNo;
 
@@ -82,11 +83,14 @@ public class HierarchicalBoardRestController {
 
         log.info("rest boardDelete");
 
-        ObjectMapper om = new ObjectMapper();
-        HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
+//        ObjectMapper om = new ObjectMapper();
+//        HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
+
+        HierarchicalBoard hierarchicalBoard = new HierarchicalBoard();
+        hierarchicalBoard.setBoardNo(Long.parseLong(boardNo));
         log.info("boardNo : " + hierarchicalBoard.getBoardNo());
 
-        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
+//        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
     }
 
     //게시글 답글 작성 처리

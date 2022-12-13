@@ -161,12 +161,18 @@
 > 
 > 
 > 
-> 남은 처리내역
-> boardDetail
-> boardInsert
-> boardModify
-> boardReply
+> 22/12/13
+> interceptor 구현 중 문제 발생.
+> 각 게시판 및 댓글 삭제와 수정 시 작성자와 로그인한 사용자가 동일한지 검증하기 위해서 interceptor 내에서 처리하도록 하고자 했으나
+> request를 interceptor에서 읽고난 뒤에 컨트롤러에서 읽을 수 없는 문제 발생.
+> 찾아보니 HttpServletRequestWrapper 를 이용해 처리해야 한다.
+> JPA가 주 목적인 프로젝트이니 기본 기능들을 먼저 구현한 다음 문제해결 할 것.
 > 
-> imageBoardDetail
+> imageBoard 리스트와 상세 페이지 완료.
+> commentRepository commentCount 각 게시판 별로 분리.
+> 
+> 
+> 남은 처리내역
 > ImageBoardInsert
 > ImageBoardModify
+> interceptor

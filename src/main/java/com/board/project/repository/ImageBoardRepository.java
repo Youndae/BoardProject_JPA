@@ -14,8 +14,10 @@ import java.util.Set;
 
 public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
 
-    @Query(value = "SELECT b FROM ImageBoard b")
-    Page<ImageBoard> imageBoardList(Pageable pageable);
+    @Query(value = "SELECT new com.board.project.domain.ImageDTO(b.imageNo, d.imageName, b.imageContent, b.imageDate, b.imageTitle, b.member.userId, d.imageStep, d.oldName)" +
+                    " FROM ImageBoard  b inner join ImageData d on b.imageNo = d.imageBoard.imageNo " +
+                    "ORDER BY b.imageNo desc")
+    List<ImageDTO> imageBoardList();
 
     @Query(value = "select b, d from ImageBoard b inner join ImageData d ON b.imageNo = d.imageBoard.imageNo where b.imageNo = ?1 order by d.imageStep asc")
     List<ImageBoard> imageDetail(long imageNo);

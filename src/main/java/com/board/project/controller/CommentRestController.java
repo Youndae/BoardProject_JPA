@@ -75,6 +75,8 @@ public class CommentRestController {
         Comment comment = om.readValue(commentNo, Comment.class);
         log.info("commentNo : "+ comment.getCommentNo());
 
-        return commentService.commentDelete(comment);
+//        return commentService.commentDelete(comment);
+
+        return 0;
     }
 }

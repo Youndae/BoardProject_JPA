@@ -40,9 +40,9 @@ class ImageBoardRepositoryTest {
         if(page > 0)
             page -= 1;
 
-        Page<ImageBoard> imageBoards = repository.imageBoardList(PageRequest.of(page, amount, Sort.by("imageNo").descending()));
+//        Page<ImageBoard> imageBoards = repository.imageBoardList(PageRequest.of(page, amount, Sort.by("imageNo").descending()));
 
-        System.out.println(imageBoards.getContent().get(2).getImageData().getClass().getName());
+//        System.out.println(imageBoards.getContent().get(2).getImageData().getClass().getName());
 
         // imageBoardMain 에서는 imageBoard 테이블 데이터와 ImageData 테이블에서 이미지 데이터 1개만 가져오면 됨.
         // 근데 이걸 그냥 페이징으로 처리한다고 하면 그렇게 처리가 안되고 다 가져오니까 차라리 nativeQuery로 하는게 나을지 고민.

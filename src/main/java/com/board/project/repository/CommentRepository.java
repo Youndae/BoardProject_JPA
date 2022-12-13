@@ -48,7 +48,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "FROM comment " +
             "WHERE boardNo = :boardNo"
             , nativeQuery = true)
-    int countComment(@Param("boardNo") long boardNo);
+    int countBoardComment(@Param("boardNo") long boardNo);
+
+    @Query(value = "SELECT count(*) " +
+            "FROM comment " +
+            "WHERE imageNo = :imageNo"
+            , nativeQuery = true)
+    int countImageComment(@Param("imageNo") long imageNo);
 
     @Query(value = "SELECT ifnull(max(commentNo) + 1, 1) " +
             "FROM comment",
