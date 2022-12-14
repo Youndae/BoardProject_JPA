@@ -81,13 +81,18 @@ public class ImageBoardController {
     }
 
     //이미지 게시판 수정
-    @GetMapping("/imageBoardModify")
-    public String imageBoardModify(Model model){
+    @GetMapping("/imageBoardModify/{imageNo}")
+    public String imageBoardModify(Model model, @PathVariable long imageNo){
         /**
          * boardNo 받아서 처리
          */
 
         log.info("image modify");
+
+        log.info("imageNo : " + imageNo);
+
+        model.addAttribute("list", imageBoardRepository.modifyImageDetail(imageNo));
+
 
         return "th/imageBoard/imageBoardModify";
     }

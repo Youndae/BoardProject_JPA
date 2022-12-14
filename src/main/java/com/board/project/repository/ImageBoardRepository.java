@@ -28,4 +28,8 @@ public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
                     "order by d.imageStep asc")
     List<ImageDTO> imageDetailDTO(long imageNo);
 
+
+    @Query(value = "SELECT b FROM ImageBoard b WHERE b.imageNo = ?1")
+    ImageBoard modifyImageDetail(long imageNo);
+
 }

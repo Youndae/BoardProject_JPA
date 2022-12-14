@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     }
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/board/boardModify"
@@ -42,5 +42,5 @@ public class WebConfig implements WebMvcConfigurer {
                         , "/imageBoard/imageModify"
                         , "/imageBoard/imageDelete");
 
-    }
+    }*/
 }
