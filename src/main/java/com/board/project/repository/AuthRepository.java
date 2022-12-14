@@ -8,9 +8,5 @@ import java.util.List;
 
 public interface AuthRepository extends JpaRepository<Auth, Long> {
 
-    @Query(value = "SELECT * " +
-            "FROM auth " +
-            "WHERE userId = 'coco'"
-        , nativeQuery = true)
-    List<Auth> findByUserId(String userId);
+
 }

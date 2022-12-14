@@ -1,6 +1,7 @@
 package com.board.project.controller;
 
 import com.board.project.domain.ImageData;
+import com.board.project.domain.ImageDataDTO;
 import com.board.project.repository.ImageDataRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ImageBoardRestController {
     //이미지 상세페이지에서 받을 이미지 파일 리스트
     @GetMapping("/imageList")
     @ResponseBody
-    public ResponseEntity<List<ImageData>> detailImageList(long imageNo){
+    public ResponseEntity<List<ImageDataDTO>> detailImageList(long imageNo){
         /**
          * imageNo 받아서 처리
          */
@@ -29,6 +30,10 @@ public class ImageBoardRestController {
         log.info("rest imageList");
 
         log.info("detailImageList imageNo : " + imageNo);
+
+//        List<ImageData> list = imageDataRepository.imageDataList(imageNo);
+
+//        log.info("test : " + new ResponseEntity<>(imageDataRepository.imageDataList(imageNo), HttpStatus.OK));
 
 
         return new ResponseEntity<>(imageDataRepository.imageDataList(imageNo),HttpStatus.OK);

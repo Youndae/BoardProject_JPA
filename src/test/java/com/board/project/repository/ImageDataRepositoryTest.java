@@ -5,6 +5,8 @@ import groovy.util.logging.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -20,10 +22,12 @@ class ImageDataRepositoryTest {
     void imageDataTest(){
 
 
-        List<ImageData> imageData = imageDataRepository.imageDataList(10L);
+        /*List<ImageData> imageData = imageDataRepository.imageDataList(10L);
 
         System.out.println("list size : " + imageData.size());
-        imageData.forEach(s -> System.out.println(s));
+        imageData.forEach(s -> System.out.println(s));*/
+
+        System.out.println(new ResponseEntity<>(imageDataRepository.imageDataList(10L), HttpStatus.OK));
     }
 
 }

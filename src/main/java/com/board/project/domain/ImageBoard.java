@@ -33,7 +33,8 @@ public class ImageBoard {
     private final Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY)
-    private final List<ImageData> imageData = new ArrayList<>();
+    @ToString.Exclude
+    private final Set<ImageData> imageData = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

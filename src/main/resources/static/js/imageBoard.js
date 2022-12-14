@@ -16,7 +16,7 @@ $(document).ready(function(){
             $(arr).each(function(i, attach){
                 $("#preview").append(
                     "<div class=\"preview-box\" value=\"" + attach.imageStep + "\">" +
-                    "<img class=\"thumbnail\" id=\"imgName\" src=\"img/" + attach.imageName + "\"\/>" +
+                    "<img class=\"thumbnail\" id=\"imgName\" src=\"/img/" + attach.imageName + "\"\/>" +
                     "<p>" + attach.oldName + "</p>" +
                     "<a href=\"#\" value=\"" + attach.imageStep + "\" onclick=\"deleteOldPreview(this)\">" +
                     "삭제" + "</a>" +

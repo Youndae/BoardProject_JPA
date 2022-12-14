@@ -172,6 +172,23 @@
 > commentRepository commentCount 각 게시판 별로 분리.
 > 
 > 
+> 22/12/14
+> ImageBoardModify, ImageBoardInsert html 파일 작성 및 imageBoard.js 파일 작성.
+> 계층형때와는 다르게 좀 중복되는 코드가 길어서 imageBoard는 js파일 우선 분리.
+> 
+> 문제는 ResponseEntity로 imageData에서 이미지 파일 데이터만 조회해 오도록 구현되어 있는데
+> imageData 엔티티를 전체조회하면 imageData, imageBoard, member, hierarchicalBoard까지 연관관계에 있는 모든 엔티티 전부가 다 조회한다.
+> 이렇게라도 처리가 되긴 하면 그나마 다행이지만 ImageData 엔티티 타입이다보니 받아주지도 못해서 오류가 발생.
+> 쿼리문을 좀 수정하니 연관관계에 있는 엔티티들은 따로 조회하지 않게 되었지만 ConvertNotFoundException이 계속 발생.
+> 이전에도 비슷한 오류가 발생했을때는 Entity 쿼리에서 엔티티 컬럼을 하나 빼먹었다거나 뭐 그런 가벼운 문제였어서 확인해봤지만
+> 전혀 문제가 없고 테스트클래스에서는 멀쩡하게 잘 조회됨.
+> 이 오류에 대한 해결 방법으로 DTO로 받아주면 된다고 하는데 imageData만 딱 받아오면 되는데 굳이 DTO를 써야하나...
+> 라는 고집에 의해 하루종일 붙들고 있었지만 결국 해결하지 못하고 ImageDataDTO를 만들어서 받아주는 방법을 사용하자마자 
+> 바로 해결.
+> 
+> 남은 기능은 파일 처리 기능.
+> 
+> 
 > 남은 처리내역
 > ImageBoardInsert
 > ImageBoardModify
