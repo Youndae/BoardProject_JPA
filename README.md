@@ -94,8 +94,8 @@
 >> 그리고 findById와 imageDetail 메소드로 테스트를 진행했을때는 쿼리문에 imageStep asc로 정렬을 하도록 해도 제대로 정렬되지 않았는데   
 >> DTO로 처리하니까 정렬도 잘된다...
 > 
-> 22/12/08
-> 현재까지 구현 내역
+> 22/12/08   
+> 현재까지 구현 내역   
 > 1. 계층형 게시판 리스트(boardList)
 > 2. 계층형 게시판 상세페이지(boardDetail) 및 댓글
 > 3. 회원가입
@@ -123,7 +123,7 @@
 >    4. 게시글 상세 페이지
 > 
 > 
-> 22/12/09
+> 22/12/09   
 > 댓글 페이징 해결.
 > > commentUpperNo 값을 RECURSIVE 로 처리했을때 처럼 넣어놔서 발생한 문제.
 > > commentUpperNo를 다시 설정함으로 해결.
@@ -134,7 +134,7 @@
 > 게시글 수정 구현중.
 >   페이지 구현까지 완료. 수정 등록 구현 해야함.
 > 
-> 22/12/12
+> 22/12/12   
 > 계층형 게시판 게시글 등록, 수정, 답글 구현중.
 > 
 > thymeleaf에서 csrf토큰을 form에 담을 때 form action을 th:action으로 쓰면 thymeleaf가 form안에 csrf 토큰을 넣어준다.
@@ -161,7 +161,7 @@
 > 
 > 
 > 
-> 22/12/13
+> 22/12/13   
 > interceptor 구현 중 문제 발생.
 > 각 게시판 및 댓글 삭제와 수정 시 작성자와 로그인한 사용자가 동일한지 검증하기 위해서 interceptor 내에서 처리하도록 하고자 했으나
 > request를 interceptor에서 읽고난 뒤에 컨트롤러에서 읽을 수 없는 문제 발생.
@@ -172,7 +172,7 @@
 > commentRepository commentCount 각 게시판 별로 분리.
 > 
 > 
-> 22/12/14
+> 22/12/14   
 > ImageBoardModify, ImageBoardInsert html 파일 작성 및 imageBoard.js 파일 작성.
 > 계층형때와는 다르게 좀 중복되는 코드가 길어서 imageBoard는 js파일 우선 분리.
 > 
@@ -188,6 +188,10 @@
 > 
 > 남은 기능은 파일 처리 기능.
 > 
+> 22/12/15   
+> 파일 처리 구현중   
+> 컨트롤러에서 정상적으로 데이터 받는것 확인.   
+> 파일 저장 및 DB insert, update, delete 처리 필요.
 > 
 > 남은 처리내역
 > ImageBoardInsert

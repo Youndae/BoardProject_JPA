@@ -1,6 +1,6 @@
 var files = {};
 var previewIndex = 0;
-var deletefiles = {};
+var deleteFiles = {};
 var step = 0;
 var deleteNo = 0;
 var token = $("meta[name='_csrf']").attr('content');
@@ -37,9 +37,13 @@ $(document).ready(function(){
             formData.append('files', files[index]);
         }
 
-        for(var index = 0; index < Object.keys(deletefiles).length; index++){
-            formData.append('deletefiles', deletefiles[index]);
+        for(var index = 0; index < Object.keys(deleteFiles).length; index++){
+            formData.append('deleteFiles', deleteFiles[index]);
         }
+
+        console.log("files size : " + formData.getAll('files').length);
+        console.log("deletefiles size : " + formData.getAll('deleteFiles').length);
+
 
         $.ajax({
             type: 'put',
@@ -47,9 +51,7 @@ $(document).ready(function(){
             processData: false,
             contentType: false,
             cache: false,
-            timeout: 600000,
             url: '/imageBoard/imageModify',
-            dataType: 'JSON',
             data: formData,
             beforeSend: function(xhr){
               xhr.setRequestHeader(header, token);
@@ -69,19 +71,21 @@ $(document).ready(function(){
         var form = $("#uploadForm")[0];
         var formData = new FormData(form);
 
+        console.log("files.length : " + Object.keys(files).length);
+
         for(var index = 0; index < Object.keys(files).length; index++){
             formData.append('files', files[index]);
         }
 
+        console.log("formData : " + formData.getAll('files'));
+
         $.ajax({
             type: 'post',
             enctype: 'multipart/form-data',
-            process: false,
+            processData: false,
             contentType: false,
             cache: false,
-            timeout: 600000,
             url: '/imageBoard/imageInsert',
-            dataType: 'JSON',
             data: formData,
             beforeSend: function(xhr){
                 xhr.setRequestHeader(header, token);
@@ -97,12 +101,14 @@ $(document).ready(function(){
         })
     });
 
-    $("#attach input[type=file]").change(function(){
+    $(".attach input[type=file]").change(function(){
+        console.log("attach input");
         addPreview($(this));
     });
 });
 
 function addPreview(input){
+    console.log("addPreview");
     if(input[0].files.length <= (5 - ($('.preview-box').length))) {
         for(var fileIndex = 0; fileIndex < input[0].files.length; fileIndex++){
             var file = input[0].files[fileIndex];
@@ -117,11 +123,10 @@ function addPreview(input){
 }
 
 function setPreviewForm(file, img){
+    console.log("setPreviewForm");
     var reader = new FileReader();
     reader.onload = function(img){
-        var length = $('.preview-box').length;
         var imgNum = ++step;
-        var fileNum = 0;
 
         $("#preview").append(
                 "<div class=\"preview-box\" id=\"newImg\" value=\"" + imgNum +"\">" +
@@ -131,25 +136,27 @@ function setPreviewForm(file, img){
                 "삭제" + "</a>"
                 + "</div>"
         );
-        files[fileNum] = file;
-        fileNum++;
+        files[previewIndex] = file;
+        previewIndex++;
     };
     reader.readAsDataURL(file);
 }
 
 function deleteOldPreview(obj){
+    console.log("deleteOldPreview");
     var imgNum = obj.attributes['value'].value;
-    var imgName = jQuery('#imgName').attr('src');
+    var imgName = $("#preview .preview-box[value=" + imgNum +"] .thumbnail").attr('src');
     var idx = imgName.lastIndexOf('/');
     var deleteImg = imgName.substring(idx + 1);
 
-    deletefiles[deleteNo] = deleteImg;
+    deleteFiles[deleteNo] = deleteImg;
     deleteNo++;
 
     $("#preview .preview-box[value=" + imgNum + "]").remove();
 }
 
 function deletePreview(obj){
+    console.log("deletePreview");
     var imgNum = obj.attributes['value'].value;
     delete files[imgNum];
 
@@ -157,10 +164,13 @@ function deletePreview(obj){
 }
 
 function validation(fileName){
-    fileName = fileName = "";
+    console.log("validation");
+    fileName = fileName + "";
     var fileNameExtensionIndex = fileName.lastIndexOf('.') + 1;
     var fileNameExtension = fileName.toLowerCase().substring(
         fileNameExtensionIndex, fileName.length);
+
+    console.log("fileNameExtension : " + fileNameExtension);
 
     if(!((fileNameExtension === 'jpg') || (fileNameExtension === 'gif') || (fileNameExtension === 'png') || (fileNameExtension === 'jpeg'))){
         alert('jpg, gif, png 확장자만 업로드가 가능합니다.');
