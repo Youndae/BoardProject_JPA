@@ -193,6 +193,35 @@
 > 컨트롤러에서 정상적으로 데이터 받는것 확인.   
 > 파일 저장 및 DB insert, update, delete 처리 필요.
 > 
+> 
+> 22/12/16
+> 파일 처리 구현중.
+> insert, modify, delete 메소드 모두 생성했고 각 기능별 메소드 분리까지 작성.
+> 처리과정은 insert 기준 imageBoard에 먼저 데이터를 담고 imageData를 처리하는 형태.
+> 여기서 문제점은 'Entity에 setter를 사용하지 않는것이 좋다. builder를 사용해라'라는 것을 봤기 때문에 builder로 처리하다보니
+> builder().imageBoard()에서 문제가 발생.
+> @NonNull 어노테이션을 imageTitle에 붙여놨더니 ImageData를 저장할때 필요한건 imageNo뿐인데도 NonNull인데 null이기 때문에 안된다는 오류가 발생.
+> NonNull을 그냥 지우면 해결되기야 할것 같았지만 그럼 나중에 @NonNull 어노테이션을 활용할 때 다시 알아봐야 할것 같아서 이상태로 해결방법을 찾음.
+> 
+> 해결 방안
+> 1. ImageBoard Entity에서 연관관계가 설정되어있는 ImageData에 대해 CascadeType.ALL을 설정.
+> 2. ImageBoard에 ImageData를 추가해주는 메소드를 생성.(addImageData(ImageData imageData))
+> 3. 서비스단에서 imageBoard를 먼저 빌드해주고 imageData를 빌드할때마다 addImageData를 통해 ImageBoard에 저장.
+> 4. ImageData의 처리가 끝나고 나면 imageBoard Entity를 save해주면 연관관계에 있는 데이터가 다 전송된다.
+> 5. 안그래도 ImageBoard는 제대로 들어가고 imageData에서 오류가 발생했을 때 롤백을 어떻게 설정해줘야 될까 고민이었는데 이 문제까지 같이 한번에 해결!
+> 6. 참고 포스팅 = https://data-make.tistory.com/730
+> 
+> 이번 문제 해결 중 알게된점 한가지.
+> mysql에서 auto_increment를 사용하다보니 위 같은 경우에 Imageboard 테이블에 저장된 id값이 뭔지 알수가 없었고
+> 그래서 다시한번 DB 조회를 통해 max 값이 무엇인지 찾아서 그걸 imageData에서 활용하는 형태로 구현해왔다.
+> 근데 save(.....build().getId())를 사용하게 되면 저장된 아이디값을 알 수 있다.
+> save를 처리한 repository가 방금 저장한 값들을 리턴하기 때문이다.
+> 근데 이것 역시 위 문제 해결 방법에서는 굳이 필요없다. 알아서 해줘서.
+> 
+> 현재까지 imageBoardInsert까지 확인했고, modify, delete 테스트 필요.
+> 
+> 
+> 
 > 남은 처리내역
 > ImageBoardInsert
 > ImageBoardModify

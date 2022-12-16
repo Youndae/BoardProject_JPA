@@ -18,7 +18,7 @@ public interface ImageBoardService {
             , HttpServletRequest request
             , ImageBoard imageBoard
             , ImageData imageData
-            , Principal principal) throws Exception;
+            , Principal principal);
 
     //이미지 게시글 수정
     int imageModifyCheck(List<MultipartFile> images

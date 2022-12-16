@@ -91,7 +91,7 @@ public class ImageBoardRestController {
     //이미지 게시판 삭제
     @DeleteMapping("/imageDelete")
     @ResponseBody
-    public void imageBoardDelete(@RequestBody String imageNo){
+    public void imageBoardDelete(@RequestBody String imageNo, HttpServletRequest request) throws Exception {
         /**
          * imageNo 받아서 처리
          * 처리 후 imageList로 이동
@@ -100,6 +100,8 @@ public class ImageBoardRestController {
         log.info("rest imageDelete");
 
         log.info("imageNo : " + imageNo);
+
+        imageBoardService.deleteImageBoard(Long.parseLong(imageNo), request);
     }
 
 

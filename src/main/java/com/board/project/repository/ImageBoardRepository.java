@@ -6,7 +6,9 @@ import com.board.project.domain.ImageData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,5 +33,13 @@ public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
 
     @Query(value = "SELECT b FROM ImageBoard b WHERE b.imageNo = ?1")
     ImageBoard modifyImageDetail(long imageNo);
+
+    /*@Modifying
+    @Transactional
+    @Query(value = "UPDATE ImageBoard SET boardTitle = ?1, boardContent = ?2 WHERE imageNo = ?3"
+            , nativeQuery = true)
+    void modifyImageBoard(String boardTitle, )*/
+
+
 
 }

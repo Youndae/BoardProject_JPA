@@ -12,6 +12,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Member {
 
     @Id

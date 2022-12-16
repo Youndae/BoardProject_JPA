@@ -17,6 +17,7 @@ public class ImageBoard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageNo;
 
+    @NonNull
     private String imageTitle;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,9 +33,9 @@ public class ImageBoard {
     @ToString.Exclude
     private final Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private final Set<ImageData> imageData = new HashSet<>();
+    private final Set<ImageData> imageDataSet = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -47,5 +48,11 @@ public class ImageBoard {
     @Override
     public int hashCode() {
         return Objects.hash(imageNo);
+    }
+
+    public void addImageData(ImageData imageData){
+        imageDataSet.add(imageData);
+        imageData.setImageBoard(this);
+
     }
 }

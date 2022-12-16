@@ -22,6 +22,7 @@ public class ImageData {
     @ToString.Exclude
     private ImageBoard imageBoard;
 
+    @NonNull
     private String oldName;
 
     private int imageStep;

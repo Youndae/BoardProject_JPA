@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.security.Principal;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -56,8 +55,8 @@ public class ImageBoardServiceImpl implements ImageBoardService{
     }
 
     @Override
-    @Transactional
-    public int imageInsertCheck(List<MultipartFile> images, HttpServletRequest request, ImageBoard imageBoard, ImageData imageData, Principal principal) throws Exception{
+    @Transactional(rollbackFor = Exception.class)
+    public int imageInsertCheck(List<MultipartFile> images, HttpServletRequest request, ImageBoard imageBoard, ImageData imageData, Principal principal) {
         log.info("imageInsertCheck");
 
         log.info("images size : " + images.size());
@@ -69,18 +68,30 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
 
 
-        try{
-            ImageBoard.builder()
-                    .member(principalService.checkPrincipal(principal))
-                    .imageTitle(request.getParameter("imageTitle"))
-                    .imageContent(request.getParameter("imageContent"))
-                    .imageDate(Date.valueOf(LocalDate.now()))
-                    .build();
+            try{
+                /*long imageNo = imageBoardRepository.save(ImageBoard.builder()
+                        .member(principalService.checkPrincipal(principal))
+                        .imageTitle(request.getParameter("imageTitle"))
+                        .imageContent(request.getParameter("imageContent"))
+                        .imageDate(Date.valueOf(LocalDate.now()))
+                        .build()).getImageNo();*/
+                ImageBoard imageBoard1 = ImageBoard.builder()
+                        .member(principalService.checkPrincipal(principal))
+                        .imageTitle(request.getParameter("imageTitle"))
+                        .imageContent(request.getParameter("imageContent"))
+                        .imageDate(Date.valueOf(LocalDate.now()))
+                        .build();
 
-            imageData = imageInsert(images, request, imageData, 0);
-        }catch (Exception e){
+//                request.setAttribute("imageNo", imageNo);
 
-        }
+                imageInsert(images, request, 1, imageBoard1);
+
+                imageBoardRepository.save(imageBoard1);
+
+            }catch (Exception e){
+//                e.printStackTrace();
+                log.info("exception!!");
+            }
 
 
         return 0;
@@ -95,6 +106,19 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
         log.info("imageTitle : " + request.getParameter("imageTitle"));
         log.info("imageContent : " + request.getParameter("imageContent"));
+
+        long imageNo = Long.parseLong(request.getParameter("imageNo"));
+
+        /*imageBoardRepository.save(ImageBoard.builder()
+                .imageNo(imageNo)
+                .imageTitle(request.getParameter("imageTitle"))
+                .imageContent(request.getParameter("imageContent"))
+                .build());*/
+
+//        imageInsert(images, request, imageDataRepository.countImageStep(imageNo) + 1);
+
+        deleteFiles(deleteFiles, request);
+
         return 0;
     }
 
@@ -103,12 +127,32 @@ public class ImageBoardServiceImpl implements ImageBoardService{
         log.info("delete imageBoard");
 
         log.info("delete imageNo : " + imageNo);
+
+
+        List<String> deleteFileName = imageDataRepository.deleteImageDataList(imageNo);
+
+        deleteFiles(deleteFileName, request);
+
     }
 
     //이미지 파일 저장 및 ImageData save
-    ImageData imageInsert(List<MultipartFile> images, HttpServletRequest request, ImageData imageData, int step) throws Exception {
+    void imageInsert(List<MultipartFile> images, HttpServletRequest request, int step, ImageBoard imageBoard) throws Exception{
+
+        /*long imageNo;
+
+        if(request.getAttribute("imageNo") != null){
+            log.info("imageInsert getAttribute imageNo");
+            imageNo = (long) request.getAttribute("imageNo");
+        }else {
+            log.info("imageInsert getParameter imageNo");
+            imageNo = Long.parseLong(request.getParameter("imageNo"));
+        }*/
+
+//        log.info("insert imageNo : " + imageNo);
 
         String filePath = request.getSession().getServletContext().getRealPath("/img/");
+
+        log.info("file path : " + filePath);
 
         for(MultipartFile image : images){
             String originalName = image.getOriginalFilename();
@@ -125,18 +169,43 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
                 log.info("saveName : "+saveName+", OldName : "+originalName+", imageStep : "+step);
 
-                return ImageData.builder().imageName(saveName).oldName(originalName).imageStep(step).build();
+                /*imageDataRepository.save(
+                        ImageData.builder()
+                                .imageName(saveName)
+                                .oldName(originalName)
+                                .imageStep(step)
+                                .build()
+                );*/
+
+                ImageData imageData = ImageData.builder()
+                        .imageName(saveName)
+                        .oldName(originalName)
+                        .imageStep(step)
+                        .build();
+
+                imageBoard.addImageData(imageData);
+
+
+                step++;
+
             }catch (Exception e){
-                throw new SQLException();
+                e.printStackTrace();
             }
         }
 
-        return imageData;
     }
 
     //이미지 파일 삭제
     void deleteFiles(List<String> deleteFiles, HttpServletRequest request) throws Exception {
+        String filePath = request.getSession().getServletContext().getRealPath("/img/");
 
+        for(int i = 0; i < deleteFiles.size(); i++){
+            File file = new File(filePath + deleteFiles.get(i));
+
+            if(file.exists()){
+                file.delete();
+            }
+        }
 
     }
 }
