@@ -48,6 +48,8 @@ class ImageBoardRepositoryTest {
         // 근데 이걸 그냥 페이징으로 처리한다고 하면 그렇게 처리가 안되고 다 가져오니까 차라리 nativeQuery로 하는게 나을지 고민.
         // 이것도 ImageDTO를 통해 처리.
 
+        repository.imageBoardList();
+
 
     }
 

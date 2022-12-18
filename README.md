@@ -221,8 +221,11 @@
 > 현재까지 imageBoardInsert까지 확인했고, modify, delete 테스트 필요.
 > 
 > 
+> 22/12/19   
+> 사진 게시판 insert, modify, delete 테스트 완료. 정상 작동.   
+> 파일 사이즈 체크 컨트롤러에서 접근하지 않고 각 insert, modify 메소드 내에서 호출하는 형태로 변경.
+> return Data : -1(error), 1(success), 2(oversize) 
+> 
 > 
 > 남은 처리내역
-> ImageBoardInsert
-> ImageBoardModify
 > interceptor

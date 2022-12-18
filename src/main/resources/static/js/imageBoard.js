@@ -57,7 +57,13 @@ $(document).ready(function(){
               xhr.setRequestHeader(header, token);
             },
             success: function(result){
-                console.log("modify result : " + result);
+                if(result == -1){
+                    alert("오류가 발생했습니다 다시 시도해주세요.\n 문제가 계속되면 관리자에게 문의해주세요.");
+                }else if(result == 2){
+                    alert("파일 사이즈를 초과했습니다.");
+                }else{
+                    location.href='/imageBoard/imageBoardDetail/' + result;
+                }
             },
             error : function(request, status, error){
                 alert("code : "+request.status + "\n"
@@ -91,7 +97,13 @@ $(document).ready(function(){
                 xhr.setRequestHeader(header, token);
             },
             success: function(result){
-                console.log("insert result : " + result);
+                if(result == -1) {
+                    alert("오류가 발생했습니다 다시 시도해주세요.\n 문제가 계속되면 관리자에게 문의해주세요.");
+                }else if(result == 2){
+                    alert("파일 사이즈를 초과했습니다.");
+                }else{
+                    location.href='/imageBoard/imageBoardDetail/' + result;
+                }
             },
             error : function(request, status, error){
                 alert("code : "+request.status + "\n"
@@ -204,8 +216,12 @@ $(function(){
             beforeSend: function(xhr){
                 xhr.setRequestHeader(header, token);
             },
-            success: function(data){
-                console.log("success");
+            success: function(result){
+                if(result == -1){
+                    alert("오류가 발생했습니다 다시 시도해주세요.\n 문제가 계속되면 관리자에게 문의해주세요.");
+                }else if(result == 1){
+                    location.href='/imageBoard/imageBoardList';
+                }
             },
             error: function(request, status, error){
                 alert("code : " + request.status + "\n"

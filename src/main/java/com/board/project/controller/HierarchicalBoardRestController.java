@@ -83,14 +83,12 @@ public class HierarchicalBoardRestController {
 
         log.info("rest boardDelete");
 
-//        ObjectMapper om = new ObjectMapper();
-//        HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
+        ObjectMapper om = new ObjectMapper();
+        HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
 
-        HierarchicalBoard hierarchicalBoard = new HierarchicalBoard();
-        hierarchicalBoard.setBoardNo(Long.parseLong(boardNo));
         log.info("boardNo : " + hierarchicalBoard.getBoardNo());
 
-//        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
+        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
     }
 
     //게시글 답글 작성 처리

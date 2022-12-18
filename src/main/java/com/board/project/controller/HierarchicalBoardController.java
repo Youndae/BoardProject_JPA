@@ -39,7 +39,7 @@ public class HierarchicalBoardController {
         if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
             model.addAttribute("boardList",
                     hierarchicalBoardRepository.hierarchicalBoardList(
-                            PageRequest.of(cri.getPageNum()
+                            PageRequest.of(cri.getPageNum() - 1
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
@@ -47,7 +47,7 @@ public class HierarchicalBoardController {
             model.addAttribute("boardList",
                     hierarchicalBoardRepository.hierarchicalBoardListSearchTitle(
                             cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum()
+                            , PageRequest.of(cri.getPageNum() - 1
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
@@ -55,7 +55,7 @@ public class HierarchicalBoardController {
             model.addAttribute("boardList",
                     hierarchicalBoardRepository.hierarchicalBoardListSearchContent(
                             cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum()
+                            , PageRequest.of(cri.getPageNum() - 1
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
@@ -63,7 +63,7 @@ public class HierarchicalBoardController {
             model.addAttribute("boardList",
                     hierarchicalBoardRepository.hierarchicalBoardListSearchUser(
                             cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum()
+                            , PageRequest.of(cri.getPageNum() - 1
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
@@ -71,11 +71,15 @@ public class HierarchicalBoardController {
             model.addAttribute("boardList",
                     hierarchicalBoardRepository.hierarchicalBoardListSearchTitleOrContent(
                             cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum()
+                            , PageRequest.of(cri.getPageNum() - 1
                                     , cri.getAmount()
                                     , Sort.by("boardGroupNo").descending()
                                             .and(Sort.by("boardUpperNo").ascending()))));
         }
+
+        long total = hierarchicalBoardRepository.count();
+
+        model.addAttribute("pageMaker", new PageDTO(cri, (int) total));
 
 
         log.info("boardList log");

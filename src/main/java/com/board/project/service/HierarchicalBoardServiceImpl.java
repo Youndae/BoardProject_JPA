@@ -37,18 +37,34 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
          * , groupNo = max
          * , Indent = 0
          * , UpperNo = max
+         *
+         * save(...build().getId())를 사용하는 경우.
+         * 1차적으로 save를 해서 boardNo를 알아야 하고.
+         * 그다음 다른 데이터를 넣어 또 save를 해야 한다는 문제점.
+         *
+         * maxNo를 구해서 사용하는 경우
+         * 동시에 요청이 들어오는 경우 원하지 않는 값이 들어올 가능성이 있음.
+         *
+         * 결과적으로 둘다 DB에 두번 접근하는것은 동일.
+         * 1. getId()를 사용할 경우
+         *      첫번째 save로 select - insert를 하게 될것이고
+         *      두번째 save로 select - update를 하게 될것.
+         * 2. maxNo를 사용할 경우
+         *      maxBoardNo()로 count 쿼리 실행 후
+         *      save로 select - insert를 실행.
+         *
+         * maxNo가 쿼리를 한번 덜 실행하긴 하지만 위험성이 존재.
+         * getId()가 안전하지만 쿼리를 여러번 실행해야 한다는 단점이 존재.
+         *
+         * Transactional을 사용했을 때 겹쳐서 들어오는 요청에 대해 어떻게 처리가 되는지를 알아볼것.
          */
 
         try{
             long maxNo = hierarchicalBoardRepository.maxBoardNo();
-            /*hierarchicalBoard.setBoardTitle(request.getParameter("boardTitle"));
-            hierarchicalBoard.setBoardContent(request.getParameter("boardContent"));
-            hierarchicalBoard.setBoardDate(Date.valueOf(LocalDate.now()));*/
+
             hierarchicalBoard.setBoardIndent(0);
             hierarchicalBoard.setBoardGroupNo(maxNo);
             hierarchicalBoard.setBoardUpperNo(String.valueOf(maxNo));
-
-//            hierarchicalBoardRepository.save(hierarchicalBoard);
 
             insertProc(hierarchicalBoard, request);
             log.info("Board insertion success");

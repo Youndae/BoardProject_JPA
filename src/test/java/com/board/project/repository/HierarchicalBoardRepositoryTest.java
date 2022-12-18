@@ -65,6 +65,11 @@ class HierarchicalBoardRepositoryTest {
     }*/
 
     @Test
+    void countTest(){
+        repository.count();
+    }
+
+    @Test
     void pagingSearchTest(){
         int page = 0;
         int amount = 20;

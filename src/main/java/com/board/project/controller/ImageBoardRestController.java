@@ -7,6 +7,7 @@ import com.board.project.domain.Member;
 import com.board.project.repository.ImageDataRepository;
 import com.board.project.service.ImageBoardService;
 import com.board.project.service.PrincipalService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,19 +53,17 @@ public class ImageBoardRestController {
     //이미지 게시판 작성
     @PostMapping("/imageInsert")
     @ResponseBody
-    public void imageBoardInsert(@RequestParam("files")List<MultipartFile> images
+    public long imageBoardInsert(@RequestParam("files")List<MultipartFile> images
                                     , HttpServletRequest request
-                                    , ImageBoard imageBoard
-                                    , ImageData imageData
                                     , Principal principal) throws Exception{
         /**
          * imageList로 이동
          */
         log.info("rest imageInsert");
 
-        imageBoardService.imageSizeCheck(images);
 
-        imageBoardService.imageInsertCheck(images, request, imageBoard, imageData, principal);
+
+        return imageBoardService.imageInsertCheck(images, request, principal);
 
     }
 
@@ -73,18 +72,14 @@ public class ImageBoardRestController {
     public void imageBoardModify(@RequestParam(value = "files", required = false) List<MultipartFile> images
                                     , @RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles
                                     , HttpServletRequest request
-                                    , ImageBoard imageBoard
-                                    , ImageData imageData) throws Exception{
+                                    , Principal principal) throws Exception{
         /**
          * imageDetail로 이동
          */
 
         log.info("rest imageModify");
 
-        if(images.size() != 0)
-            imageBoardService.imageSizeCheck(images);
-
-        imageBoardService.imageModifyCheck(images, deleteFiles, request, imageBoard, imageData);
+        imageBoardService.imageModifyCheck(images, deleteFiles, request, principal);
 
     }
 
@@ -101,7 +96,12 @@ public class ImageBoardRestController {
 
         log.info("imageNo : " + imageNo);
 
-        imageBoardService.deleteImageBoard(Long.parseLong(imageNo), request);
+        ObjectMapper om = new ObjectMapper();
+        ImageBoard imageBoard = om.readValue(imageNo, ImageBoard.class);
+
+        log.info("imageNo : " + imageBoard.getImageNo());
+
+        imageBoardService.deleteImageBoard(imageBoard.getImageNo(), request);
     }
 
 

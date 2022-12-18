@@ -2,7 +2,6 @@ package com.board.project.service;
 
 import com.board.project.domain.ImageBoard;
 import com.board.project.domain.ImageData;
-import com.board.project.domain.Member;
 import com.board.project.properties.ImageSizeProperties;
 import com.board.project.repository.ImageBoardRepository;
 import com.board.project.repository.ImageDataRepository;
@@ -36,8 +35,8 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
     private static long sizeSum = 0;
 
-    @Override
-    public int imageSizeCheck(List<MultipartFile> images) throws Exception {
+    //이미지파일 사이즈 체크
+    public long imageSizeCheck(List<MultipartFile> images) throws Exception {
         log.info("image Size check");
         /*log.info("images size : " + images.size());
         images.forEach(s -> log.info("imageFile : " + s));*/
@@ -56,99 +55,116 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int imageInsertCheck(List<MultipartFile> images, HttpServletRequest request, ImageBoard imageBoard, ImageData imageData, Principal principal) {
+    public long imageInsertCheck(List<MultipartFile> images, HttpServletRequest request, Principal principal) {
         log.info("imageInsertCheck");
 
         log.info("images size : " + images.size());
         images.forEach(s -> log.info("imageInsertCheck file : " + s.getOriginalFilename()));
 
+        try{
+            if(imageSizeCheck(images) == ImageSizeProperties.RESULT_EXCEED_SIZE){
+                return ImageSizeProperties.RESULT_EXCEED_SIZE;
+            }
+        }catch (Exception e){
+            log.info("sizeCheck Exception");
+            return -1;
+        }
+
+
         log.info("imageTitle : " + request.getParameter("imageTitle"));
         log.info("imageContent : " + request.getParameter("imageContent"));
 
-
-
-
             try{
-                /*long imageNo = imageBoardRepository.save(ImageBoard.builder()
-                        .member(principalService.checkPrincipal(principal))
-                        .imageTitle(request.getParameter("imageTitle"))
-                        .imageContent(request.getParameter("imageContent"))
-                        .imageDate(Date.valueOf(LocalDate.now()))
-                        .build()).getImageNo();*/
-                ImageBoard imageBoard1 = ImageBoard.builder()
+                ImageBoard imageBoard = ImageBoard.builder()
                         .member(principalService.checkPrincipal(principal))
                         .imageTitle(request.getParameter("imageTitle"))
                         .imageContent(request.getParameter("imageContent"))
                         .imageDate(Date.valueOf(LocalDate.now()))
                         .build();
 
-//                request.setAttribute("imageNo", imageNo);
+                imageInsert(images, request, 1, imageBoard);
 
-                imageInsert(images, request, 1, imageBoard1);
-
-                imageBoardRepository.save(imageBoard1);
+                return imageBoardRepository.save(imageBoard).getImageNo();
 
             }catch (Exception e){
-//                e.printStackTrace();
-                log.info("exception!!");
+                log.info("insertion exception!!");
+                return -1;
             }
 
-
-        return 0;
     }
 
     @Override
-    public int imageModifyCheck(List<MultipartFile> images, List<String> deleteFiles, HttpServletRequest request, ImageBoard imageBoard, ImageData imageData) throws Exception {
+    public long imageModifyCheck(List<MultipartFile> images, List<String> deleteFiles, HttpServletRequest request, Principal principal) throws Exception {
         log.info("imageModifyCheck");
-
-        images.forEach(s -> log.info("imageModify files : " + s.getOriginalFilename()));
-        deleteFiles.forEach(s -> log.info("imageModify deleteFiles : " + s));
 
         log.info("imageTitle : " + request.getParameter("imageTitle"));
         log.info("imageContent : " + request.getParameter("imageContent"));
 
+        try{
+            if(images != null){
+                if(imageSizeCheck(images) == ImageSizeProperties.RESULT_EXCEED_SIZE){
+                    return ImageSizeProperties.RESULT_EXCEED_SIZE;
+                }
+            }
+        }catch (Exception e){
+            log.info("Modify sizeCheck Exception");
+            return -1;
+        }
+
         long imageNo = Long.parseLong(request.getParameter("imageNo"));
 
-        /*imageBoardRepository.save(ImageBoard.builder()
-                .imageNo(imageNo)
-                .imageTitle(request.getParameter("imageTitle"))
-                .imageContent(request.getParameter("imageContent"))
-                .build());*/
+        try{
+            ImageBoard imageBoard = ImageBoard.builder()
+                    .member(principalService.checkPrincipal(principal))
+                    .imageNo(imageNo)
+                    .imageTitle(request.getParameter("imageTitle"))
+                    .imageContent(request.getParameter("imageContent"))
+                    .imageDate(Date.valueOf(request.getParameter("imageDate")))
+                    .build();
 
-//        imageInsert(images, request, imageDataRepository.countImageStep(imageNo) + 1);
+            if(images != null)
+                imageInsert(images, request, imageDataRepository.countImageStep(imageNo) + 1, imageBoard);
 
-        deleteFiles(deleteFiles, request);
+            //delete imageData 필요.
+            if(deleteFiles != null)
+                deleteFilesProc(deleteFiles, request);
 
-        return 0;
+            return imageBoardRepository.save(imageBoard).getImageNo();
+        }catch (Exception e){
+            log.info("modify exception");
+            return -1;
+        }
+
+
+
     }
 
     @Override
-    public void deleteImageBoard(long imageNo, HttpServletRequest request) throws Exception {
+    public long deleteImageBoard(long imageNo, HttpServletRequest request) throws Exception {
         log.info("delete imageBoard");
 
         log.info("delete imageNo : " + imageNo);
 
+        try{
+            List<String> deleteFileName = imageDataRepository.deleteImageDataList(imageNo);
 
-        List<String> deleteFileName = imageDataRepository.deleteImageDataList(imageNo);
+            deleteFilesProc(deleteFileName, request);
 
-        deleteFiles(deleteFileName, request);
+            imageBoardRepository.deleteById(imageNo);
+
+            return 1;
+        }catch (Exception e){
+            log.info("deleteBoard Exception");
+            return -1;
+        }
+
+
+
 
     }
 
     //이미지 파일 저장 및 ImageData save
     void imageInsert(List<MultipartFile> images, HttpServletRequest request, int step, ImageBoard imageBoard) throws Exception{
-
-        /*long imageNo;
-
-        if(request.getAttribute("imageNo") != null){
-            log.info("imageInsert getAttribute imageNo");
-            imageNo = (long) request.getAttribute("imageNo");
-        }else {
-            log.info("imageInsert getParameter imageNo");
-            imageNo = Long.parseLong(request.getParameter("imageNo"));
-        }*/
-
-//        log.info("insert imageNo : " + imageNo);
 
         String filePath = request.getSession().getServletContext().getRealPath("/img/");
 
@@ -169,14 +185,6 @@ public class ImageBoardServiceImpl implements ImageBoardService{
 
                 log.info("saveName : "+saveName+", OldName : "+originalName+", imageStep : "+step);
 
-                /*imageDataRepository.save(
-                        ImageData.builder()
-                                .imageName(saveName)
-                                .oldName(originalName)
-                                .imageStep(step)
-                                .build()
-                );*/
-
                 ImageData imageData = ImageData.builder()
                         .imageName(saveName)
                         .oldName(originalName)
@@ -184,7 +192,6 @@ public class ImageBoardServiceImpl implements ImageBoardService{
                         .build();
 
                 imageBoard.addImageData(imageData);
-
 
                 step++;
 
@@ -196,15 +203,20 @@ public class ImageBoardServiceImpl implements ImageBoardService{
     }
 
     //이미지 파일 삭제
-    void deleteFiles(List<String> deleteFiles, HttpServletRequest request) throws Exception {
+    void deleteFilesProc(List<String> deleteFiles, HttpServletRequest request) throws Exception {
         String filePath = request.getSession().getServletContext().getRealPath("/img/");
 
-        for(int i = 0; i < deleteFiles.size(); i++){
-            File file = new File(filePath + deleteFiles.get(i));
+        try{
+            for(int i = 0; i < deleteFiles.size(); i++){
+                imageDataRepository.deleteById(deleteFiles.get(i));
+                File file = new File(filePath + deleteFiles.get(i));
 
-            if(file.exists()){
-                file.delete();
+                if(file.exists()){
+                    file.delete();
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }

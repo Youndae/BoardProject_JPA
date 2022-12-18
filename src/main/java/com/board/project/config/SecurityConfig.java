@@ -24,48 +24,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
 
-/*@Configuration
-@EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    public AuthenticationSuccessHandler loginSuccessHandler(){
-        return new CustomAuthenticationSuccessHandler();
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/js/**", "/css/**");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers().frameOptions().sameOrigin();
-
-        http.authorizeRequests()
-                    .antMatchers("/", "/login/**", "/resources/**", "/css/**", "/js/**")
-                    .permitAll()
-                .and()
-                    .formLogin()
-                    .usernameParameter("userId")
-                    .passwordParameter("userPw")
-                    .successHandler(loginSuccessHandler())
-                .and()
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/board/boardList")
-                    .invalidateHttpSession(true)
-                .and()
-                    .exceptionHandling().accessDeniedPage("/");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-}*/
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -94,7 +52,7 @@ public class SecurityConfig {
             .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/board/boardList")
+                .logoutSuccessUrl("/imageBoard/imageBoardList")
                 .invalidateHttpSession(true)
             .and()
                 .exceptionHandling().accessDeniedPage("/");
