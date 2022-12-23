@@ -3,12 +3,16 @@ package com.board.project.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.sql.Date;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+//@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 @Builder
 public class Comment {
 
@@ -40,5 +44,7 @@ public class Comment {
     @JoinColumn(name = "boardNo")
     @ToString.Exclude
     private HierarchicalBoard hierarchicalBoard;
+
+
 
 }

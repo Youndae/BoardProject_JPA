@@ -8,6 +8,7 @@ import com.board.project.repository.ImageDataRepository;
 import com.board.project.service.ImageBoardService;
 import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,17 +23,17 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/imageBoard")
+@RequiredArgsConstructor
 public class ImageBoardRestController {
 
-    @Autowired
-    private ImageDataRepository imageDataRepository;
 
-    @Autowired
-    private ImageBoardService imageBoardService;
+    private final ImageDataRepository imageDataRepository;
+
+
+    private final ImageBoardService imageBoardService;
 
     //이미지 상세페이지에서 받을 이미지 파일 리스트
     @GetMapping("/imageList")
-    @ResponseBody
     public ResponseEntity<List<ImageDataDTO>> detailImageList(long imageNo){
         /**
          * imageNo 받아서 처리
@@ -52,7 +53,6 @@ public class ImageBoardRestController {
 
     //이미지 게시판 작성
     @PostMapping("/imageInsert")
-    @ResponseBody
     public long imageBoardInsert(@RequestParam("files")List<MultipartFile> images
                                     , HttpServletRequest request
                                     , Principal principal) throws Exception{
@@ -85,7 +85,6 @@ public class ImageBoardRestController {
 
     //이미지 게시판 삭제
     @DeleteMapping("/imageDelete")
-    @ResponseBody
     public void imageBoardDelete(@RequestBody String imageNo, HttpServletRequest request) throws Exception {
         /**
          * imageNo 받아서 처리

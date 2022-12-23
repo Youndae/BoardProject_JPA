@@ -29,8 +29,7 @@ public class ImageBoard {
 
     private String imageContent;
 
-    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private final Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -53,6 +52,5 @@ public class ImageBoard {
     public void addImageData(ImageData imageData){
         imageDataSet.add(imageData);
         imageData.setImageBoard(this);
-
     }
 }

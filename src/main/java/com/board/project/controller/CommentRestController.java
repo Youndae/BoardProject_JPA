@@ -29,7 +29,6 @@ public class CommentRestController {
 
     //댓글 작성
     @PostMapping("/commentInsert")
-    @ResponseBody
     public int commentInsert(@RequestBody Map<String, Object> commentData
                                 , Comment comment
                                 , Principal principal) throws Exception{
@@ -38,17 +37,19 @@ public class CommentRestController {
         //principal check
         Member member = principalService.checkPrincipal(principal);
 
-        if(member == null)
+        /*if(member == null)
             return 0; //principal error == 0
         else
-            comment.setMember(member);
+            comment.setMember(member);*/
 
-        return commentService.commentInsert(commentData, comment);
+        commentData.forEach((s, o) -> log.info("comment insert " + s + " : " + o));
+
+        return commentService.commentInsert(commentData, comment, principal);
+
     }
 
     //대댓글 작성
     @PostMapping("/commentReply")
-    @ResponseBody
     public int commentReply(@RequestBody Map<String, Object> commentData
                                 , Comment comment
                                 , Principal principal)throws Exception{
@@ -57,26 +58,27 @@ public class CommentRestController {
         //principal check
         Member member = principalService.checkPrincipal(principal);
 
-        if(member == null)
+        /*if(member == null)
             return 0; //principal error == 0
         else
-            comment.setMember(member);
+            comment.setMember(member);*/
 
-        return commentService.commentReplyInsert(commentData, comment);
+        return commentService.commentReplyInsert(commentData, comment, principal);
+
     }
 
     //댓글 삭제
     @DeleteMapping("/commentDelete")
-    @ResponseBody
     public int commentDelete(@RequestBody String commentNo) throws Exception{
         log.info("comment Delete");
+
+        log.info("comment delete commentNo : " + commentNo);
 
         ObjectMapper om = new ObjectMapper();
         Comment comment = om.readValue(commentNo, Comment.class);
         log.info("commentNo : "+ comment.getCommentNo());
 
-//        return commentService.commentDelete(comment);
+        return commentService.commentDelete(comment);
 
-        return 0;
     }
 }

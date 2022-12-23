@@ -6,6 +6,7 @@ import com.board.project.repository.HierarchicalBoardRepository;
 import com.board.project.service.HierarchicalBoardService;
 import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,21 +18,18 @@ import java.security.Principal;
 @RestController
 @Slf4j
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class HierarchicalBoardRestController {
 
-    @Autowired
-    private HierarchicalBoardRepository hierarchicalBoardRepository;
 
-    @Autowired
-    private PrincipalService principalService;
+    private final HierarchicalBoardRepository hierarchicalBoardRepository;
 
-    @Autowired
-    private HierarchicalBoardService hierarchicalBoardService;
+    private final HierarchicalBoardService hierarchicalBoardService;
 
 
     //게시글 작성 처리
     @PostMapping("/boardInsert")
-    public String hierarchicalBoardInsert(HierarchicalBoard hierarchicalBoard, HttpServletRequest request, Principal principal) throws Exception{
+    public String hierarchicalBoardInsert(HttpServletRequest request, Principal principal) throws Exception{
         /**
          * insert 처리 후 boardList로 이동
          */
@@ -41,9 +39,7 @@ public class HierarchicalBoardRestController {
         log.info("title :  "  +request.getParameter("boardTitle"));
         log.info("content : " + request.getParameter("boardContent"));
 
-
-        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
-        hierarchicalBoardService.insertBoard(hierarchicalBoard, request);
+        hierarchicalBoardService.insertBoard(request, principal);
 
         return "redirect:/board/boardList";
 
@@ -67,7 +63,7 @@ public class HierarchicalBoardRestController {
         long boardNo = Long.parseLong(request.getParameter("boardNo"));
 
 
-//        hierarchicalBoardRepository.boardModify(boardTitle, boardContent, boardNo);
+        hierarchicalBoardRepository.boardModify(boardTitle, boardContent, boardNo);
 
         return "redirect:/board/boardDetail/"+boardNo;
 
@@ -75,13 +71,14 @@ public class HierarchicalBoardRestController {
 
     //게시글 삭제 처리
     @DeleteMapping("/boardDelete")
-    @ResponseBody
     public void hierarchicalBoardDelete(@RequestBody String boardNo) throws Exception{
         /**
          * 삭제 처리 후 boardList로 이동
          */
 
         log.info("rest boardDelete");
+
+        log.info("boardDelete no : " + boardNo);
 
         ObjectMapper om = new ObjectMapper();
         HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
@@ -93,7 +90,7 @@ public class HierarchicalBoardRestController {
 
     //게시글 답글 작성 처리
     @PostMapping("/boardReply")
-    public void hierarchicalBoardReply(HierarchicalBoard hierarchicalBoard, HttpServletRequest request, Principal principal) throws Exception{
+    public void hierarchicalBoardReply(HttpServletRequest request, Principal principal) throws Exception{
         /**
          * 답글 작성 처리 후 boardList로 이동
          */
@@ -105,7 +102,7 @@ public class HierarchicalBoardRestController {
         log.info("groupNo : " + request.getParameter("boardGroupNo"));
         log.info("upperNo : " + request.getParameter("boardUpperNo"));
 
-        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
-        hierarchicalBoardService.insertBoardReply(hierarchicalBoard, request);
+//        hierarchicalBoard.setMember(principalService.checkPrincipal(principal));
+        hierarchicalBoardService.insertBoardReply(request, principal);
     }
 }

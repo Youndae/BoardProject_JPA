@@ -220,12 +220,47 @@
 > 
 > 현재까지 imageBoardInsert까지 확인했고, modify, delete 테스트 필요.
 > 
-> 
+> #
 > 22/12/19   
 > 사진 게시판 insert, modify, delete 테스트 완료. 정상 작동.   
 > 파일 사이즈 체크 컨트롤러에서 접근하지 않고 각 insert, modify 메소드 내에서 호출하는 형태로 변경.
 > return Data : -1(error), 1(success), 2(oversize) 
+> #
+> 22/12/23   
+> commentService 수정.   
+> setter를 사용하지 않고 builder를 통해서만 처리하기 위해 그에 맞는 방법으로 수정.
+> #
+> 기존 로직   
+> 1. maxNo라는 변수에 현재 테이블에서 가장 큰 commentNo를 조회해서 담음. 이 maxNo는 GroupNo와 UpperNo에 사용.
+> 2. comment.set~~ 을 통해 필요값을 담음.
+> 3. 각 게시판별 게시글 번호를 담아야 하므로 메소드를 호출해 조건문으로 어느 게시판 번호를 갖고 있는지 체크 후 comment에 set해서 comment 객체를 리턴
+> 4. repository.save(comment)로 저장.
+> #
+> 기존 로직의 문제점.
+> 1. maxNo로 조회해서 처리하는 방법의 문제점으로는 운영 서비스에서 조회한 maxNo와 commit 당시의 maxNo가 차이가 생길 가능성이 있음.
+> 2. 차이가 생기게 되면 본인의 commentNo와 GroupNo, UpperNo가 동일해야 하는데 달라진다는 문제점이 발생.
+> 3. 또한 문제점까지는 아니지만 Entity에는 setter로 처리하기보다는 builder로 처리하는 방식으로 하는것이 좋기에 이 부분의 수정이 필요.
+> #
+> 
+> 코드 수정
+> 1. maxNo 대신 1차적으로 notNull로 지정되어있는 필드인 member, content, date를 save를 하면서 getCommentNo()를 통해 save된 데이터의 commentNo를 변수에 저장.
+> 2. 그 변수를 통해 GroupNo와 UpperNo 값을 수정하는데 Map 형태로 받은 commentData에 put.
+> 3. GroupNo, UpperNo 를 제외한 나머지 데이터들도 모두 commentData에 put으로 수정 혹은 추가.
+> 4. checkBoard 메소드를 호출해 어느 게시판의 몇번 게시글인지 확인하고 그에 따라 각 게시판 댓글 수정 메소드를 호출
+> 5. 각 게시판 댓글 수정 메소드는 commentData를 인자로 받고 GroupNo, UpperNo, Indent, 게시판 No, CommentNo를 매개변수로 쿼리문 실행.
+> #
+> 
+> 수정 코드에서 좀 더 생각해봐야 하는 부분   
+> 
+> JPA는 save() 하나로 insert와 update가 가능하다. 하지만 update를 위한 save()를 하기 위해서는 모든 필드의 값이 필요하다.   
+> 그 말은 이미 저장된 데이터 역시 같이 빌드해서 처리해야 한다. 이렇게 처리하게 되면 굳이 쿼리를 통해 수정을 할 필요가 없이 save()로 처리할 수 있다는 장점이 있다.   
+> 하지만 이미 저장된 데이터와 동일한 값들을 굳이 넣어서 또 보내줘야 하는가? 라는 의문점이 생긴다.   
+> save로 처리하지 않는다면 필요한 필드값만 넘겨서 update 쿼리로 처리해줄 수 있지만 save로 처리하게 되면 select -> update 순서로 처리되는 부분도 있고 
+> 같은 데이터를 한번 더 덮어 씌운다는 점에서 오히려 문제 발생의 여지가 더 생기지 않나 싶다.   
 > 
 > 
-> 남은 처리내역
+> 
+> #
+> 남은 처리내역   
+> 모든 Entity 처리에서 setter를 사용하지 않고 builder 패턴을 사용하도록 수정 후 테스트.   
 > interceptor

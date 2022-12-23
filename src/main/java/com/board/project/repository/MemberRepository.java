@@ -17,7 +17,11 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     MemberAuthDTO getUser(String userId);*/
 
 
-    @Query(value = "SELECT m.userId, m.userPw, m.auths FROM Member m WHERE m.userId = ?1")
+    @Query(value = "SELECT m.userId" +
+            ", m.userPw" +
+            ", m.auths " +
+            "FROM Member m " +
+            "WHERE m.userId = ?1")
     Member userInfo(String userId);
 
     /*@Query(value = "select new com.board.project.domain.MemberAuthDTO(m.userId, m.userPw, m.auths) from Member m where m.userId = ?1")

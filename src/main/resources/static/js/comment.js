@@ -69,12 +69,16 @@ $(function(){
                 },
                 success: function(data){
                     console.log("return data :  " + data);
-                    location.reload();
+                    // location.reload();
                 },
                 error: function(request, status, error){
-                    alert("code : " +request.status + "\n"
+                    /*alert("code : " +request.status + "\n"
                         + "message : " + request.responseText + "\n"
-                        + "error : " + error);
+                        + "error : " + error);*/
+
+                    if(request.status == 500){
+                        alert("오류가 발생했습니다. 다시 시도해주세요\n 문제가 계속된다면 관리자에게 문의해주세요.");
+                    }
                 }
             })
         }

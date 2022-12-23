@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -60,6 +61,28 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "FROM comment",
         nativeQuery = true)
     long maxCommentNo();
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE comment " +
+            "SET commentGroupNo = ?1" +
+            ", commentIndent = ?2" +
+            ", commentUpperNo = ?3" +
+            ", imageNo = ?4 " +
+            "WHERE commentNo = ?5"
+    , nativeQuery = true)
+    int modifyImageComment(long commentGroupNo, int commentIndent, String commentUpperNo, long imageNo, long commentNo);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE comment " +
+            "SET commentGroupNo = ?1" +
+            ", commentIndent = ?2" +
+            ", commentUpperNo = ?3" +
+            ", boardNo = ?4 " +
+            "WHERE commentNo = ?5"
+    , nativeQuery = true)
+    int modifyHierarchicalComment(long commentGroupNo, int commentIndent, String commentUpperNo, long boardNo, long commentNo);
 
 
 

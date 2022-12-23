@@ -46,7 +46,7 @@ public class ImageBoardController {
 
     //이미지 게시판 상세
     @GetMapping("/imageBoardDetail/{imageNo}")
-    public String imageBoardDetail(@PathVariable long imageNo, Model model, Criteria criteria){
+    public String imageBoardDetail(@PathVariable long imageNo, Model model, Criteria criteria, Principal principal){
         /**
          * boardNo 받아서 처리
          */
@@ -67,6 +67,8 @@ public class ImageBoardController {
         int total = commentRepository.countImageComment(imageNo);
 
         model.addAttribute("pageMaker", new PageDTO(criteria, total));
+
+        log.info("principal.getName : " + principal.getName());
 
 
         return "th/imageBoard/imageBoardDetail";
