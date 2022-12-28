@@ -83,8 +83,6 @@ $(document).ready(function(){
             formData.append('files', files[index]);
         }
 
-        console.log("formData : " + formData.getAll('files'));
-
         $.ajax({
             type: 'post',
             enctype: 'multipart/form-data',

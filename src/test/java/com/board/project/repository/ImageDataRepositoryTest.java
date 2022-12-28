@@ -67,7 +67,7 @@ class ImageDataRepositoryTest {
 
         ImageData imageData = new ImageData();
 
-        imageData.setImageName("testImageData");
+//        imageData.setImageName("testImageData");
 
         System.out.println("oldName : " + imageData.getOldName());
         imageDataRepository.saveAndFlush(

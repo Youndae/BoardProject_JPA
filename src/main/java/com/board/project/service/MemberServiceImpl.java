@@ -29,8 +29,15 @@ public class MemberServiceImpl implements MemberService{
 
     private int joinMember(Member member){
         try{
-            member.setUserPw(passwordEncoder.encode(member.getUserPw()));
-            memberRepository.save(member);
+//            member.setUserPw(passwordEncoder.encode(member.getUserPw()));
+
+            Member memberEntity = Member.builder()
+                            .userId(member.getUserId())
+                            .userPw(passwordEncoder.encode(member.getUserPw()))
+                            .userName(member.getUserName())
+                            .build();
+
+            memberRepository.save(memberEntity);
             log.info("join success");
             return 1;
         }catch (Exception e){

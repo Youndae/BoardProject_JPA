@@ -10,7 +10,9 @@ import javax.persistence.ManyToOne;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 @Builder
 public class ImageData {
 
@@ -27,4 +29,7 @@ public class ImageData {
 
     private int imageStep;
 
+    public void setImageBoard(ImageBoard imageBoard) {
+        this.imageBoard = imageBoard;
+    }
 }

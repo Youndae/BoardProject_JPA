@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.*;
 
-@Data
+@ToString
+@EqualsAndHashCode
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -38,6 +40,7 @@ public class Member {
     @ToString.Exclude
     private List<Auth> auths;
 
-
-
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

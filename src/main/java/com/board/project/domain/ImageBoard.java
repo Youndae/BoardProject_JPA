@@ -9,7 +9,9 @@ import java.util.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@ToString
+@EqualsAndHashCode
+@Getter
 @Builder
 public class ImageBoard {
 

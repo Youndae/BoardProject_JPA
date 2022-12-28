@@ -1,6 +1,7 @@
 package com.board.project.service;
 
 import com.board.project.domain.HierarchicalBoard;
+import com.board.project.domain.Member;
 import com.board.project.repository.HierarchicalBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,9 +66,24 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
          */
 
         try{
-            long maxNo = hierarchicalBoardRepository.maxBoardNo();
+//            long maxNo = hierarchicalBoardRepository.maxBoardNo();
 
-            HierarchicalBoard hierarchicalBoard = HierarchicalBoard.builder()
+            Member member = principalService.checkPrincipal(principal);
+
+            long boardNo = hierarchicalBoardRepository.save(
+                                    HierarchicalBoard.builder()
+                                            .boardTitle(request.getParameter("boardTitle"))
+                                            .member(member)
+                                            .boardDate(Date.valueOf(LocalDate.now()))
+                                            .build()
+            ).getBoardNo();
+
+            request.setAttribute("boardNo", boardNo);
+            request.setAttribute("boardGroupNo", boardNo);
+            request.setAttribute("boardIndent", 0);
+            request.setAttribute("boardUpperNo", boardNo);
+
+            /*HierarchicalBoard hierarchicalBoard = HierarchicalBoard.builder()
                             .boardTitle(request.getParameter("boardTitle"))
                             .boardContent(request.getParameter("boardContent"))
                             .boardIndent(0)
@@ -75,7 +91,7 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
                             .boardUpperNo(String.valueOf(maxNo))
                             .boardDate(Date.valueOf(LocalDate.now()))
                             .member(principalService.checkPrincipal(principal))
-                            .build();
+                            .build();*/
 
             /*hierarchicalBoard.setBoardIndent(0);
             hierarchicalBoard.setBoardGroupNo(maxNo);
@@ -83,7 +99,11 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
             insertProc(hierarchicalBoard, request);*/
 
-            hierarchicalBoardRepository.save(hierarchicalBoard);
+
+
+            insertModifyHierarchicalBoard(request);
+
+//            hierarchicalBoardRepository.save(hierarchicalBoard);
             log.info("Board insertion success");
         }catch (Exception e){
             log.info("Board insertion failure");
@@ -92,12 +112,39 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
     }
 
+    //insert 후 modify 처리
+    public void insertModifyHierarchicalBoard(HttpServletRequest request){
+        log.info("modifyBoard");
+
+        hierarchicalBoardRepository.boardInsertModify(request.getParameter("boardContent")
+                                    , Integer.parseInt(request.getAttribute("boardIndent").toString())
+                                    , Long.parseLong(request.getAttribute("boardGroupNo").toString())
+                                    , request.getAttribute("boardUpperNo").toString()
+                                    , Long.parseLong(request.getAttribute("boardNo").toString())
+                         );
+
+    }
+
     @Override
     public void insertBoardReply(HttpServletRequest request, Principal principal) throws Exception {
         log.info("insert Board Reply");
-        long maxNo = hierarchicalBoardRepository.maxBoardNo();
 
-        HierarchicalBoard hierarchicalBoard = HierarchicalBoard.builder()
+        long boardNo = hierarchicalBoardRepository.save(
+                HierarchicalBoard.builder()
+                        .boardTitle(request.getParameter("boardTitle"))
+                        .boardDate(Date.valueOf(LocalDate.now()))
+                        .member(principalService.checkPrincipal(principal))
+                        .build()
+        ).getBoardNo();
+
+        request.setAttribute("boardNo", boardNo);
+        request.setAttribute("boardGroupNo", request.getParameter("boardGroupNo"));
+        request.setAttribute("boardIndent", request.getParameter("boardIndent"));
+        request.setAttribute("boardUpperNo", request.getParameter("boardUpperNo") + "," + boardNo);
+
+
+
+        /*HierarchicalBoard hierarchicalBoard = HierarchicalBoard.builder()
                         .boardTitle(request.getParameter("boardTitle"))
                         .boardContent(request.getParameter("boardContent"))
                         .boardIndent(Integer.parseInt(request.getParameter("boardIndent")) + 1)
@@ -105,9 +152,9 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
                         .boardUpperNo(request.getParameter("boardUpperNo") + "," + maxNo)
                         .boardDate(Date.valueOf(LocalDate.now()))
                         .member(principalService.checkPrincipal(principal))
-                        .build();
+                        .build();*/
 
-        hierarchicalBoardRepository.save(hierarchicalBoard);
+        insertModifyHierarchicalBoard(request);
 
     }
 
@@ -123,18 +170,15 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
         }
     }
 
-    int insertProc(HierarchicalBoard hierarchicalBoard, HttpServletRequest request) throws Exception {
-        try{
-            hierarchicalBoard.setBoardTitle(request.getParameter("boardTitle"));
-            hierarchicalBoard.setBoardContent(request.getParameter("boardContent"));
-            hierarchicalBoard.setBoardDate(Date.valueOf(LocalDate.now()));
+    //boardModify
+    @Override
+    public void boardModify(HttpServletRequest request){
 
-            hierarchicalBoardRepository.save(hierarchicalBoard);
-            log.info("save success");
-            return 1;
-        }catch (Exception e){
-            log.info("save failure");
-            return 0;
-        }
+        hierarchicalBoardRepository.boardModify(
+                request.getParameter("boardTitle")
+                , request.getParameter("boardContent")
+                , Long.parseLong(request.getParameter("boardNo"))
+        );
     }
+
 }

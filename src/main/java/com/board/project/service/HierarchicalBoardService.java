@@ -12,4 +12,6 @@ public interface HierarchicalBoardService {
     void insertBoardReply(HttpServletRequest request, Principal principal) throws Exception;
 
     void deleteBoard(HierarchicalBoard hierarchicalBoard);
+
+    void boardModify(HttpServletRequest request);
 }

@@ -47,25 +47,16 @@ public class HierarchicalBoardRestController {
 
     //게시글 수정 처리
     @PutMapping("/boardModify")
-    public String hierarchicalBoardModify(HierarchicalBoard hierarchicalBoard, HttpServletRequest request) throws Exception {
+    public String hierarchicalBoardModify(HttpServletRequest request) throws Exception {
         /**
          * update 처리 후 boardDetail로 이동
          */
 
         log.info("rest boardModify");
 
-        log.info("request title : " + request.getParameter("boardTitle"));
-        log.info("request boardNo : " + request.getParameter("boardNo"));
-        log.info("request content :  " + request.getParameter("boardContent"));
+        hierarchicalBoardService.boardModify(request);
 
-        String boardTitle = request.getParameter("boardTitle");
-        String boardContent = request.getParameter("boardContent");
-        long boardNo = Long.parseLong(request.getParameter("boardNo"));
-
-
-        hierarchicalBoardRepository.boardModify(boardTitle, boardContent, boardNo);
-
-        return "redirect:/board/boardDetail/"+boardNo;
+        return "redirect:/board/boardList";
 
     }
 

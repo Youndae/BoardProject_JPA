@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(callSuper = true)

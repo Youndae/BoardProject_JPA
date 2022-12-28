@@ -116,4 +116,15 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
             "FROM hierarchicalBoard"
     , nativeQuery = true)
     long maxBoardNo();
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE hierarchicalBoard " +
+            "SET boardContent = ?1" +
+            ", boardIndent = ?2" +
+            ", boardGroupNo = ?3" +
+            ", boardUpperNo = ?4 " +
+            "WHERE boardNo = ?5"
+    , nativeQuery = true)
+    void boardInsertModify(String boardContent, int boardIndent, long boardGroupNo, String boardUpperNo, long boardNo);
 }
