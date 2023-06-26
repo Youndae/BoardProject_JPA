@@ -33,7 +33,7 @@ spring:
 
 
 server:
-  port: 9095
+  port: 8080
 
 logging:
   file:

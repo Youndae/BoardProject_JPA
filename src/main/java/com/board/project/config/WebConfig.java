@@ -1,7 +1,6 @@
 package com.board.project.config;
 
 
-import com.board.project.config.interceptor.CustomAuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.board.project")
 public class WebConfig implements WebMvcConfigurer {
-
-    @Autowired
-    CustomAuthInterceptor interceptor;
 
 
     @Override

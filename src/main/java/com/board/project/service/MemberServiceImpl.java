@@ -1,8 +1,7 @@
 package com.board.project.service;
 
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.Member;
 import com.board.project.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

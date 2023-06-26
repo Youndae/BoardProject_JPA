@@ -1,7 +1,6 @@
 package com.board.project.security.domain;
 
-import com.board.project.domain.Member;
-import com.board.project.domain.MemberAuthDTO;
+import com.board.project.domain.entity.Member;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter

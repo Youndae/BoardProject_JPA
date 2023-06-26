@@ -1,20 +1,16 @@
 package com.board.project.service;
 
-import com.board.project.domain.Comment;
-import com.board.project.domain.HierarchicalBoard;
-import com.board.project.domain.ImageBoard;
+import com.board.project.domain.entity.Comment;
 import com.board.project.repository.CommentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 /**
  * return 1 == success

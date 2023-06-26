@@ -1,14 +1,13 @@
 package com.board.project.controller;
 
-import com.board.project.domain.Criteria;
-import com.board.project.domain.PageDTO;
+import com.board.project.domain.entity.Criteria;
+import com.board.project.domain.dto.PageDTO;
 import com.board.project.repository.CommentRepository;
 import com.board.project.repository.ImageBoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +59,7 @@ public class ImageBoardController {
         model.addAttribute("detail", imageBoardRepository.imageDetailDTO(imageNo));
         model.addAttribute("comment", commentRepository.imageCommentList(imageNo
                                                         , PageRequest.of(criteria.getPageNum() - 1
-                                                                , criteria.getAmount()
+                                                                , criteria.getImageAmount()
                                                                 , Sort.by("commentGroupNo").ascending()
                                                                             .and(Sort.by("commentUpperNo").descending()))));
 

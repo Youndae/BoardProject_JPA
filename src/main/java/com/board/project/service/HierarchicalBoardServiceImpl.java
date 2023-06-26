@@ -1,11 +1,16 @@
 package com.board.project.service;
 
-import com.board.project.domain.HierarchicalBoard;
-import com.board.project.domain.Member;
+import com.board.project.domain.dto.HierarchicalBoardDTO;
+import com.board.project.domain.dto.HierarchicalBoardModifyDTO;
+import com.board.project.domain.entity.Criteria;
+import com.board.project.domain.entity.HierarchicalBoard;
+import com.board.project.domain.entity.Member;
 import com.board.project.repository.HierarchicalBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +28,62 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
     private final PrincipalService principalService;
 
+
+    @Override
+    public Page<HierarchicalBoardDTO> getHierarchicalBoardList(Criteria cri) {
+
+        Page<HierarchicalBoardDTO> dto = null;
+
+        String keyword = null;
+
+        if(cri.getKeyword() != null)
+            keyword = "%" + cri.getKeyword() + "%";
+
+
+        if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
+            dto =
+                    hierarchicalBoardRepository.hierarchicalBoardList(
+                            PageRequest.of(cri.getPageNum() - 1
+                                    , cri.getBoardAmount()
+                                    , Sort.by("boardGroupNo").descending()
+                                            .and(Sort.by("boardUpperNo").ascending())));
+        } else if (cri.getSearchType().equals("t")) {//title 검색시 사용
+            dto =
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitle(
+                            keyword
+                            , PageRequest.of(cri.getPageNum() - 1
+                                    , cri.getBoardAmount()
+                                    , Sort.by("boardGroupNo").descending()
+                                            .and(Sort.by("boardUpperNo").ascending())));
+        } else if (cri.getSearchType().equals("c")) {//content 검색시 사용
+            dto =
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchContent(
+                            keyword
+                            , PageRequest.of(cri.getPageNum() - 1
+                                    , cri.getBoardAmount()
+                                    , Sort.by("boardGroupNo").descending()
+                                            .and(Sort.by("boardUpperNo").ascending())));
+        } else if (cri.getSearchType().equals("u")) {// user 검색 시 사용
+            dto =
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchUser(
+                            keyword
+                            , PageRequest.of(cri.getPageNum() - 1
+                                    , cri.getBoardAmount()
+                                    , Sort.by("boardGroupNo").descending()
+                                            .and(Sort.by("boardUpperNo").ascending())));
+        } else if (cri.getKeyword().equals("tc")) {// title and content 검색시 사용
+            dto =
+                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitleOrContent(
+                            keyword
+                            , PageRequest.of(cri.getPageNum() - 1
+                                    , cri.getBoardAmount()
+                                    , Sort.by("boardGroupNo").descending()
+                                            .and(Sort.by("boardUpperNo").ascending())));
+        }
+
+        return dto;
+    }
+
     /**
      *
      * default로 넣어줘야 하는 데이터
@@ -32,7 +93,6 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
      *
      * save도 공통.
      */
-
     @Override
     public void insertBoard(HttpServletRequest request, Principal principal) throws Exception {
       log.info("service insert Board");
@@ -112,6 +172,20 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
     }
 
+    //수정 데이터 get
+    @Override
+    public HierarchicalBoardModifyDTO getModifyData(long boardNo, Principal principal) {
+        HierarchicalBoardModifyDTO dto;
+
+        if(principal == null || !principal.getName().equals(hierarchicalBoardRepository.checkWriter(boardNo)))
+            dto = null;
+        else{
+            dto = hierarchicalBoardRepository.getModifyData(boardNo);
+        }
+
+        return dto;
+    }
+
     //insert 후 modify 처리
     public void insertModifyHierarchicalBoard(HttpServletRequest request){
         log.info("modifyBoard");
@@ -172,13 +246,15 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
     //boardModify
     @Override
-    public void boardModify(HttpServletRequest request){
+    public long boardModify(HttpServletRequest request){
 
         hierarchicalBoardRepository.boardModify(
                 request.getParameter("boardTitle")
                 , request.getParameter("boardContent")
                 , Long.parseLong(request.getParameter("boardNo"))
         );
+
+        return Long.parseLong(request.getParameter("boardNo"));
     }
 
 }

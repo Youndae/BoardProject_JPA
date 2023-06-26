@@ -1,6 +1,6 @@
 package com.board.project.service;
 
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.Member;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;

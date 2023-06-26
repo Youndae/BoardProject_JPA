@@ -1,7 +1,5 @@
 package com.board.project.service;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageData;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;

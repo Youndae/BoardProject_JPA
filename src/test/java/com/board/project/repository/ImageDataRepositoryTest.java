@@ -1,9 +1,8 @@
 package com.board.project.repository;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageData;
-import com.board.project.domain.Member;
-import groovy.util.logging.Slf4j;
+import com.board.project.domain.entity.ImageBoard;
+import com.board.project.domain.entity.ImageData;
+import com.board.project.domain.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ImageDataRepositoryTest {

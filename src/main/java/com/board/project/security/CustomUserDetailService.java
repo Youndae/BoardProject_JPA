@@ -1,9 +1,6 @@
 package com.board.project.security;
 
-import com.board.project.domain.Auth;
-import com.board.project.domain.Member;
-import com.board.project.domain.MemberAuthDTO;
-import com.board.project.repository.AuthRepository;
+import com.board.project.domain.entity.Member;
 import com.board.project.repository.MemberRepository;
 import com.board.project.security.domain.CustomUser;
 import lombok.Setter;
@@ -15,8 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service

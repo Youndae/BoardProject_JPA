@@ -1,16 +1,18 @@
 package com.board.project.controller;
 
-import com.board.project.domain.Comment;
-import com.board.project.domain.Criteria;
-import com.board.project.domain.PageDTO;
+import com.board.project.domain.dto.BoardCommentDTO;
+import com.board.project.domain.dto.HierarchicalBoardDTO;
+import com.board.project.domain.dto.HierarchicalBoardModifyDTO;
+import com.board.project.domain.entity.Comment;
+import com.board.project.domain.entity.Criteria;
+import com.board.project.domain.dto.PageDTO;
 import com.board.project.repository.CommentRepository;
 import com.board.project.repository.HierarchicalBoardRepository;
+import com.board.project.service.HierarchicalBoardService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,56 +33,19 @@ public class HierarchicalBoardController {
 
     private final CommentRepository commentRepository;
 
+    private final HierarchicalBoardService hierarchicalBoardService;
+
 
     //계층형 게시판 리스트(메인)
     @RequestMapping(method = RequestMethod.GET, value = "/boardList")
-    public String hierarchicalBoardMain(Model model, Criteria cri) {
+    public String hierarchicalBoardMain(Model model
+                                        , Criteria cri) {
 
-        if (cri.getKeyword() == null || cri.getKeyword() == "") {// default List
-            model.addAttribute("boardList",
-                    hierarchicalBoardRepository.hierarchicalBoardList(
-                            PageRequest.of(cri.getPageNum() - 1
-                                    , cri.getAmount()
-                                    , Sort.by("boardGroupNo").descending()
-                                            .and(Sort.by("boardUpperNo").ascending()))));
-        } else if (cri.getSearchType() == "t") {//title 검색시 사용
-            model.addAttribute("boardList",
-                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitle(
-                            cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum() - 1
-                                    , cri.getAmount()
-                                    , Sort.by("boardGroupNo").descending()
-                                            .and(Sort.by("boardUpperNo").ascending()))));
-        } else if (cri.getSearchType() == "c") {//content 검색시 사용
-            model.addAttribute("boardList",
-                    hierarchicalBoardRepository.hierarchicalBoardListSearchContent(
-                            cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum() - 1
-                                    , cri.getAmount()
-                                    , Sort.by("boardGroupNo").descending()
-                                            .and(Sort.by("boardUpperNo").ascending()))));
-        } else if (cri.getSearchType() == "u") {// user 검색 시 사용
-            model.addAttribute("boardList",
-                    hierarchicalBoardRepository.hierarchicalBoardListSearchUser(
-                            cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum() - 1
-                                    , cri.getAmount()
-                                    , Sort.by("boardGroupNo").descending()
-                                            .and(Sort.by("boardUpperNo").ascending()))));
-        } else if (cri.getKeyword() == "tc") {// title and content 검색시 사용
-            model.addAttribute("boardList",
-                    hierarchicalBoardRepository.hierarchicalBoardListSearchTitleOrContent(
-                            cri.getKeyword()
-                            , PageRequest.of(cri.getPageNum() - 1
-                                    , cri.getAmount()
-                                    , Sort.by("boardGroupNo").descending()
-                                            .and(Sort.by("boardUpperNo").ascending()))));
-        }
+        Page<HierarchicalBoardDTO> dto = hierarchicalBoardService.getHierarchicalBoardList(cri);
 
-        long total = hierarchicalBoardRepository.count();
+        model.addAttribute("boardList",dto.getContent());
 
-        model.addAttribute("pageMaker", new PageDTO(cri, (int) total));
-
+        model.addAttribute("pageMaker", new PageDTO(cri, dto.getTotalPages()));
 
         log.info("boardList log");
 
@@ -106,29 +71,21 @@ public class HierarchicalBoardController {
             session.setAttribute("userId", principal.getName());
 
         model.addAttribute("boardDetail", hierarchicalBoardRepository.findByBoardNo(boardNo));
-        model.addAttribute("comment", commentRepository.hierarchicalCommentList(boardNo
-                                                        , PageRequest.of(criteria.getPageNum() - 1
-                                                                , criteria.getAmount()
-                                                                , Sort.by("commentGroupNo").ascending()
-                                                                                .and(Sort.by("commentUpperNo").ascending()))));
+
+        Page<BoardCommentDTO> commentDTO = commentRepository.hierarchicalCommentList(boardNo
+                                            , PageRequest.of(criteria.getPageNum() - 1
+                                                    , criteria.getBoardAmount()
+                                                    , Sort.by("commentGroupNo").ascending()
+                                                            .and(Sort.by("commentUpperNo").ascending())));
+
+        model.addAttribute("comment", commentDTO.getContent());
 
         /*if(principal == null)
             log.info("Principal is null");
         else if(principal != null)
             log.info("Principal is not null " + principal.getName());*/
 
-        log.info("getPageNum : " + criteria.getPageNum());
-        log.info("getAmount : " + criteria.getAmount());
-
-        log.info("comment : " + commentRepository.hierarchicalCommentList(boardNo
-                , PageRequest.of(criteria.getPageNum() - 1
-                        , criteria.getAmount()
-                        , Sort.by("commentGroupNo").descending()
-                                .and(Sort.by("commentUpperNo").ascending()))));
-
-        int total = commentRepository.countBoardComment(boardNo);
-
-        model.addAttribute("pageMaker", new PageDTO(criteria, total));
+        model.addAttribute("pageMaker", new PageDTO(criteria, commentDTO.getTotalPages()));
 
 
 
@@ -137,16 +94,23 @@ public class HierarchicalBoardController {
 
     //계층형 게시판 수정페이지
     @GetMapping("/boardModify/{boardNo}")
-    public String hierarchicalBoardModify(Model model, @PathVariable long boardNo) {
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public String hierarchicalBoardModify(Model model, @PathVariable long boardNo, Principal principal) {
         /**
          * boardNo 받아서 처리
          */
 
-        model.addAttribute("boardModify", hierarchicalBoardRepository.findByBoardNo(boardNo));
+        HierarchicalBoardModifyDTO dto = hierarchicalBoardService.getModifyData(boardNo, principal);
 
-        log.info("boardModify");
+        if(dto == null){
+            return "th/error/error";
+        }else{
+            model.addAttribute("boardModify", dto);
 
-        return "th/board/boardModify";
+            log.info("boardModify");
+
+            return "th/board/boardModify";
+        }
     }
 
     //계층형 게시판 글작성

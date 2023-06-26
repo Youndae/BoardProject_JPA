@@ -1,7 +1,7 @@
 package com.board.project.service;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageData;
+import com.board.project.domain.entity.ImageBoard;
+import com.board.project.domain.entity.ImageData;
 import com.board.project.properties.ImageSizeProperties;
 import com.board.project.repository.ImageBoardRepository;
 import com.board.project.repository.ImageDataRepository;

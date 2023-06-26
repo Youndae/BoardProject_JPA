@@ -1,49 +1,47 @@
 package com.board.project.repository;
 
-import com.board.project.domain.Comment;
+import com.board.project.domain.dto.BoardCommentDTO;
+import com.board.project.domain.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "SELECT commentNo" +
-            ", CONCAT(REPEAT('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', commentIndent), '', commentContent) AS commentContent" +
-            ", userId" +
-            ", commentDate" +
-            ", commentGroupNo" +
-            ", commentIndent" +
-            ", commentUpperNo" +
-            ", imageNo" +
-            ", boardNo " +
-            "FROM comment " +
-            "WHERE boardNo = :boardNo",
-            countQuery = "SELECT count(*) FROM comment WHERE boardNo = :boardNo",
-            nativeQuery = true)
-    Page<Comment> hierarchicalCommentList(@Param("boardNo")long boardNo, Pageable pageable);
+    @Query(value = "SELECT new com.board.project.domain.dto.BoardCommentDTO(" +
+            "c.commentNo" +
+            ", c.member.userId" +
+            ", c.commentDate" +
+            ", c.commentContent" +
+            ", c.commentGroupNo" +
+            ", c.commentIndent" +
+            ", c.commentUpperNo) " +
+            "FROM Comment c " +
+            "WHERE c.hierarchicalBoard.boardNo = :boardNo"
+    , countQuery = "SELECT count(c) " +
+            "FROM Comment c " +
+            "WHERE c.hierarchicalBoard.boardNo = :boardNo")
+    Page<BoardCommentDTO> hierarchicalCommentList(@Param("boardNo")long boardNo, Pageable pageable);
 
-    @Query(value = "SELECT commentNo" +
-            ", CONCAT(REPEAT('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', commentIndent), '', commentContent) AS commentContent" +
-            ", userId" +
-            ", commentDate" +
-            ", commentGroupNo" +
-            ", commentIndent" +
-            ", commentUpperNo" +
-            ", imageNo" +
-            ", boardNo " +
-            "FROM comment " +
-            "WHERE imageNo = :boardNo",
-        countQuery = "SELECT count(*) FROM comment WHERE imageNo = :boardNo",
-        nativeQuery = true)
-    Page<Comment> imageCommentList(@Param("boardNo")long boardNo, Pageable pageable);
+    @Query(value = "SELECT new com.board.project.domain.dto.BoardCommentDTO(" +
+            "c.commentNo" +
+            ", c.member.userId" +
+            ", c.commentDate" +
+            ", c.commentContent" +
+            ", c.commentGroupNo" +
+            ", c.commentIndent" +
+            ", c.commentUpperNo) " +
+            "FROM Comment c " +
+            "WHERE c.imageBoard.imageNo = :imageNo"
+    , countQuery = "SELECT count(c) " +
+            "FROM Comment c " +
+            "WHERE c.imageBoard.imageNo = :imageNo")
+    Page<BoardCommentDTO> imageCommentList(@Param("imageNo")long boardNo, Pageable pageable);
 
     @Query(value = "SELECT count(*) " +
             "FROM comment " +

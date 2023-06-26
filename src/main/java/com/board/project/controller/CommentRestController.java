@@ -1,20 +1,16 @@
 package com.board.project.controller;
 
 
-import com.board.project.domain.Comment;
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.Comment;
+import com.board.project.domain.entity.Member;
 import com.board.project.service.CommentService;
 import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 
 @RestController

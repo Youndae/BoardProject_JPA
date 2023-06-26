@@ -1,7 +1,6 @@
 package com.board.project.repository;
 
-import com.board.project.domain.Member;
-import com.board.project.domain.MemberAuthDTO;
+import com.board.project.domain.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

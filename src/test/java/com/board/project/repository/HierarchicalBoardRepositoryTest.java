@@ -1,26 +1,17 @@
 package com.board.project.repository;
 
-import com.board.project.domain.Auth;
-import com.board.project.domain.HierarchicalBoard;
-import com.board.project.domain.Member;
-import org.junit.jupiter.api.Assertions;
+import com.board.project.domain.dto.HierarchicalBoardDTO;
+import com.board.project.domain.entity.HierarchicalBoard;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,12 +64,20 @@ class HierarchicalBoardRepositoryTest {
     void pagingSearchTest(){
         int page = 0;
         int amount = 20;
-        String searchType = "userId";
 
-        String keyword = "coco";
+        String keyword = "Reply";
         keyword = "%" + keyword + "%";
 
-        if(page > 0)
+        Page<HierarchicalBoardDTO> dto = repository.hierarchicalBoardListSearchTitle(
+                keyword
+                , PageRequest.of(1 - 1
+                        , amount
+                        , Sort.by("boardGroupNo").descending()
+                                .and(Sort.by("boardUpperNo").ascending())));
+
+        System.out.println(dto);
+
+        /*if(page > 0)
             page -= 1;
 
         if(searchType == "title" || searchType == null){
@@ -89,7 +88,7 @@ class HierarchicalBoardRepositoryTest {
             repository.hierarchicalBoardListSearchUser(keyword, PageRequest.of(page, amount, Sort.by("boardGroupNo").descending().and(Sort.by("boardUpperNo").ascending())));
         }else if(searchType == "titleAndContent"){
             repository.hierarchicalBoardListSearchTitleOrContent(keyword, PageRequest.of(page, amount, Sort.by("boardGroupNo").descending().and(Sort.by("boardUpperNo").ascending())));
-        }
+        }*/
 
     }
 

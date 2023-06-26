@@ -1,12 +1,11 @@
 package com.board.project.repository;
 
-import com.board.project.domain.ImageData;
-import com.board.project.domain.ImageDataDTO;
+import com.board.project.domain.entity.ImageData;
+import com.board.project.domain.dto.ImageDataDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ImageDataRepository extends JpaRepository<ImageData, String> {
 

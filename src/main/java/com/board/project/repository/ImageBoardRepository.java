@@ -1,22 +1,19 @@
 package com.board.project.repository;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageDTO;
-import com.board.project.domain.ImageData;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.board.project.domain.entity.ImageBoard;
+import com.board.project.domain.dto.ImageDTO;
+import com.board.project.domain.entity.ImageData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
 
-    @Query(value = "SELECT new com.board.project.domain.ImageDTO(" +
+    @Query(value = "SELECT new com.board.project.domain.dto.ImageDTO(" +
             "b.imageNo" +
             ", d.imageName" +
             ", b.imageContent" +
@@ -33,7 +30,7 @@ public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
     List<ImageDTO> imageBoardList();
 
 
-    @Query(value = "select new com.board.project.domain.ImageDTO(" +
+    @Query(value = "select new com.board.project.domain.dto.ImageDTO(" +
             "b.imageNo" +
             ", d.imageName" +
             ", b.imageContent" +

@@ -1,18 +1,20 @@
 package com.board.project.controller;
 
-import com.board.project.domain.HierarchicalBoard;
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.HierarchicalBoard;
 import com.board.project.repository.HierarchicalBoardRepository;
 import com.board.project.service.HierarchicalBoardService;
-import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.security.Principal;
 
 @RestController
@@ -47,17 +49,22 @@ public class HierarchicalBoardRestController {
 
     //게시글 수정 처리
     @PutMapping("/boardModify")
-    public String hierarchicalBoardModify(HttpServletRequest request) throws Exception {
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public ResponseEntity<?> hierarchicalBoardModify(HttpServletRequest request) throws Exception {
         /**
          * update 처리 후 boardDetail로 이동
          */
 
         log.info("rest boardModify");
 
-        hierarchicalBoardService.boardModify(request);
+        long boardNo = hierarchicalBoardService.boardModify(request);
 
-        return "redirect:/board/boardList";
+        log.info("modify boardNo : {}", boardNo);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/board/boardDetail/" + boardNo));
+
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     //게시글 삭제 처리

@@ -29,7 +29,15 @@ $(document).ready(function(){
 
         form.submit();
     })
+
+    $("#keywordInput").keydown(function(key){
+        if(key.keyCode == 13){
+            $("#searchBtn").click();
+        }
+    })
 })
+
+
 
 $(function(){
     $("#reply").click(function(){
@@ -63,6 +71,7 @@ $(function(){
             },
             success: function(data){
                 console.log("delete success");
+                location.href = "/board/boardList";
             },
             error: function(request, status, error){
                 alert("code : " + request.status + "\n"

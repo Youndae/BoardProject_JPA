@@ -1,6 +1,6 @@
 package com.board.project.service;
 
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.Member;
 
 public interface MemberService {
     public int memberJoinProc(Member member);

@@ -1,22 +1,13 @@
 package com.board.project.repository;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageDTO;
-import com.board.project.domain.ImageData;
+import com.board.project.domain.dto.ImageDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ImageBoardRepositoryTest {

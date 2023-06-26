@@ -1,8 +1,7 @@
 package com.board.project.repository;
 
-import com.board.project.domain.Comment;
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.Comment;
+import com.board.project.domain.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +12,6 @@ import javax.transaction.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CommentRepositoryTest {

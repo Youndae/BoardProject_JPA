@@ -1,6 +1,6 @@
 package com.board.project.service;
 
-import com.board.project.domain.Comment;
+import com.board.project.domain.entity.Comment;
 
 import java.security.Principal;
 import java.util.Map;

@@ -1,16 +1,12 @@
 package com.board.project.controller;
 
-import com.board.project.domain.ImageBoard;
-import com.board.project.domain.ImageData;
-import com.board.project.domain.ImageDataDTO;
-import com.board.project.domain.Member;
+import com.board.project.domain.entity.ImageBoard;
+import com.board.project.domain.dto.ImageDataDTO;
 import com.board.project.repository.ImageDataRepository;
 import com.board.project.service.ImageBoardService;
-import com.board.project.service.PrincipalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
