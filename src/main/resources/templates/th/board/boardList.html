@@ -9,29 +9,9 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-3.3.1.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/paging.js}"></script>
-    <style>
-        li {
-            list-style: none;
-            float: left;
-            padding: 5px;
-        }
-        .board-list-paging .active {
-            font-weight: bold;
-            color: black;
-        }
-        .title_indent_1{
-            padding-left: 20px;
-        }
-        .title_indent_2{
-            padding-left: 40px;
-        }
-        .title_indent_3{
-            padding-left: 60px;
-        }
-        .title_indent_4{
-            padding-left: 80px;
-        }
-    </style>
+    <link rel="stylesheet" th:src="@{/css/nav.css}">
+    <link rel="stylesheet" th:src="@{/css/paging.css}">
+    <link rel="stylesheet" th:src="@{/css/hierarchicalBoard.css}">
 </head>
 <body>
 <div layout:fragment="content">

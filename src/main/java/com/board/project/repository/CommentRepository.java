@@ -43,17 +43,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "WHERE c.imageBoard.imageNo = :imageNo")
     Page<BoardCommentDTO> imageCommentList(@Param("imageNo")long boardNo, Pageable pageable);
 
-    @Query(value = "SELECT count(*) " +
-            "FROM comment " +
-            "WHERE boardNo = :boardNo"
-            , nativeQuery = true)
-    int countBoardComment(@Param("boardNo") long boardNo);
-
-    @Query(value = "SELECT count(*) " +
-            "FROM comment " +
-            "WHERE imageNo = :imageNo"
-            , nativeQuery = true)
-    int countImageComment(@Param("imageNo") long imageNo);
 
     @Query(value = "SELECT ifnull(max(commentNo) + 1, 1) " +
             "FROM comment",

@@ -1,0 +1,4 @@
+.board-list-paging .active {
+    font-weight: bold;
+    color: black;
+}

@@ -7,24 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
 
-    /*@Query(value = "SELECT m.userId, m.userPw, m.auths FROM Member m WHERE m.userId = ?1")
-    Member getUserInfo(String userId);*/
-
-    /*@Query(value = "SELECT new com.board.project.domain.dto.MemberAuthDTO(m.userId, m.userPw, m.auth) FROM Member m WHERE m.userId = ?1")
-    MemberAuthDTO getUser(String userId);*/
-
-
-    @Query(value = "SELECT m.userId" +
-            ", m.userPw" +
-            ", m.auths " +
-            "FROM Member m " +
-            "WHERE m.userId = ?1")
-    Member userInfo(String userId);
-
-    /*@Query(value = "select new com.board.project.domain.dto.MemberAuthDTO(m.userId, m.userPw, m.auths) from Member m where m.userId = ?1")
-    MemberAuthDTO userInfo2(String userId);*/
-
-
     Member findByUserId(String userId);
 
 }

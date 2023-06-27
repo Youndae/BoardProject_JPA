@@ -11,21 +11,7 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-3.3.1.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/hierarchicalBoard.js}"></script>
-    <!--<script>
-        var token = $("meta[name='_csrf']").attr('content');
-        var header = $("meta[name='_csrf_header']").attr('content');
-
-        $(document).ready(function(){
-            $("#modifyProc").on('click', function(){
-                var form = $("#insertBoardFrm");
-
-                console.log("modify btn click");
-
-                // form.attr('action', '/board/boardModify');
-                form.submit();
-            })
-        })
-    </script>-->
+    <link rel="stylesheet" th:src="@{/css/nav.css}">
 </head>
 <body>
 <div layout:fragment="content">

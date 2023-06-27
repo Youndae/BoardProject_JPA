@@ -10,45 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-3.3.1.min.js}"></script>
-    <script>
-
-        $(function(){
-           $("#join").click(function(){
-               var token = $("meta[name='_csrf']").attr('content');
-               var header = $("meta[name='_csrf_header']").attr('content');
-               var form = $('#joinForm')[0];
-
-               var formData = new FormData(form);
-
-               $.ajaxSettings.traditional = true;
-               $.ajax({
-                   url: '/member/joinProc',
-                   contentType: false,
-                   processData: false,
-                   cache: false,
-                   type: 'post',
-                   data: formData,
-                   beforeSend: function(xhr) {
-                       xhr.setRequestHeader(header, token);
-                   },
-                   success: function(data){
-                       if(data == 0){
-                           alert("가입 실패");
-                       }else{
-                           alert("가입 되었습니다.")
-                           location.href='/member/loginForm';
-                       }
-                       // console.log("ok");
-                   },
-                   error: function(request, status, error){
-                       alert("code : " + request.status + "\n"
-                       + "message : " + request.responseText
-                       + "\n" + "error : " + error);
-                   }
-               })
-           })
-        });
-    </script>
+    <link rel="stylesheet" th:src="@{/css/nav.css}">
+    <script type="text/javascript" th:src="@{/js/user.js}"></script>
 </head>
 <body>
 <div layout:fragment="content">

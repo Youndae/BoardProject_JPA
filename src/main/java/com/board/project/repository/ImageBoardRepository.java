@@ -143,16 +143,6 @@ public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
     ImageBoardModifyDTO modifyImageDetail(long imageNo);
 
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE ImageBoard b " +
-            "SET b.imageTitle = ?1" +
-            ", b.imageContent = ?2" +
-            ", b.imageDataSet = ?3 " +
-            "WHERE b.imageNo = ?4")
-    void imageBoardModify(String imageTitle, String imageContent, Set<ImageData> imageDataSet, long imageNo);
-
-
     @Query(value = "SELECT userId " +
             "FROM imageBoard " +
             "WHERE imageNo = ?1"
