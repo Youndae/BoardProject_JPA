@@ -1,13 +1,20 @@
 package com.board.project.controller;
 
+import com.board.project.domain.dto.BoardCommentDTO;
+import com.board.project.domain.dto.ImageBoardDTO;
+import com.board.project.domain.dto.ImageBoardModifyDTO;
 import com.board.project.domain.entity.Criteria;
 import com.board.project.domain.dto.PageDTO;
 import com.board.project.repository.CommentRepository;
 import com.board.project.repository.ImageBoardRepository;
+import com.board.project.service.ImageBoardService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,29 +22,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
 @Slf4j
 @RequestMapping("/imageBoard")
+@RequiredArgsConstructor
 public class ImageBoardController {
 
-    @Autowired
-    private ImageBoardRepository imageBoardRepository;
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final ImageBoardRepository imageBoardRepository;
+
+    private final CommentRepository commentRepository;
+
+    private final ImageBoardService imageBoardService;
 
 
     //이미지 게시판 리스트(메인)
     @GetMapping("/imageBoardList")
-    public String imageBoardMain(HttpServletRequest request, Model model){
+    public String imageBoardMain(Model model, Criteria cri){
 
-        String filePath = request.getSession().getServletContext().getRealPath("img/");
 
-        log.info("filepath : " + filePath);
+        Page<ImageBoardDTO> dto = imageBoardService.getImageList(cri);
 
-        model.addAttribute("imageList", imageBoardRepository.imageBoardList());
+        model.addAttribute("imageList", dto.getContent());
+        model.addAttribute("pageMaker", new PageDTO(cri, dto.getTotalPages()));
 
         return "th/imageBoard/imageBoardList";
 
@@ -45,7 +55,11 @@ public class ImageBoardController {
 
     //이미지 게시판 상세
     @GetMapping("/imageBoardDetail/{imageNo}")
-    public String imageBoardDetail(@PathVariable long imageNo, Model model, Criteria criteria, Principal principal){
+    public String imageBoardDetail(@PathVariable long imageNo
+                                    , Model model
+                                    , Criteria criteria
+                                    , Principal principal
+                                    , HttpSession session){
         /**
          * boardNo 받아서 처리
          */
@@ -54,27 +68,27 @@ public class ImageBoardController {
 
         log.info("imageNo : " + imageNo);
 
-//        model.addAttribute("detail", repository.imageDetail(10L));
+        if(principal != null)
+            session.setAttribute("userId", principal.getName());
 
         model.addAttribute("detail", imageBoardRepository.imageDetailDTO(imageNo));
-        model.addAttribute("comment", commentRepository.imageCommentList(imageNo
-                                                        , PageRequest.of(criteria.getPageNum() - 1
-                                                                , criteria.getImageAmount()
-                                                                , Sort.by("commentGroupNo").ascending()
-                                                                            .and(Sort.by("commentUpperNo").descending()))));
 
-        int total = commentRepository.countImageComment(imageNo);
+        Page<BoardCommentDTO> commentDTO = commentRepository.imageCommentList(imageNo
+                                            , PageRequest.of(criteria.getPageNum() - 1
+                                                    , criteria.getImageAmount()
+                                                    , Sort.by("commentGroupNo").ascending()
+                                                            .and(Sort.by("commentUpperNo").descending())));
 
-        model.addAttribute("pageMaker", new PageDTO(criteria, total));
+        model.addAttribute("comment", commentDTO.getContent());
 
-        log.info("principal.getName : " + principal.getName());
-
+        model.addAttribute("pageMaker", new PageDTO(criteria, commentDTO.getTotalPages()));
 
         return "th/imageBoard/imageBoardDetail";
     }
 
     //이미지 게시판 작성
     @GetMapping("/imageBoardInsert")
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String imageBoardInsert(){
         log.info("image insert");
 
@@ -83,7 +97,8 @@ public class ImageBoardController {
 
     //이미지 게시판 수정
     @GetMapping("/imageBoardModify/{imageNo}")
-    public String imageBoardModify(Model model, @PathVariable long imageNo){
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public String imageBoardModify(Model model, @PathVariable long imageNo, Principal principal){
         /**
          * boardNo 받아서 처리
          */
@@ -92,10 +107,15 @@ public class ImageBoardController {
 
         log.info("imageNo : " + imageNo);
 
-        model.addAttribute("list", imageBoardRepository.modifyImageDetail(imageNo));
+        ImageBoardModifyDTO dto = imageBoardService.getImageModifyData(imageNo, principal);
 
+        if(dto == null){
+            return "th/error/error";
+        }else {
+            model.addAttribute("list", dto);
 
-        return "th/imageBoard/imageBoardModify";
+            return "th/imageBoard/imageBoardModify";
+        }
     }
 
 }

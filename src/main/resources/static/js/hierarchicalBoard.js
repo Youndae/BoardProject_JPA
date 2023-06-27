@@ -55,23 +55,26 @@ $(function(){
     $("#deleteBoard").click(function(){
         console.log("delete board");
 
-        var delData = {
-            boardNo : $("#boardNo").val()
-        };
-        console.log("boardNo : " + delData.toString());
-
-        delData = JSON.stringify(delData);
+        var boardNo = $("#boardNo").val();
 
         $.ajax({
-            url: '/board/boardDelete',
+            url: '/board/boardDelete/' + boardNo,
             method: 'delete',
-            data: delData,
             beforeSend: function(xhr){
                 xhr.setRequestHeader(header, token);
             },
             success: function(data){
-                console.log("delete success");
-                location.href = "/board/boardList";
+                if(data == 1){
+                    console.log("delete success");
+                    location.href = "/board/boardList";
+                }else if(data == -1){
+                    console.log("delete fail");
+                    alert("오류가 발생했습니다.\n 문제가 계속되면 관리자에게 문의 부탁드립니다.");
+                }else if(data == 0){
+                    console.log("delete fail");
+                    alert("처리할 수 없는 요청입니다.\n 문제가 계속되면 관리자에게 문의 부탁드립니다.");
+                }
+
             },
             error: function(request, status, error){
                 alert("code : " + request.status + "\n"

@@ -94,7 +94,7 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
      * save도 공통.
      */
     @Override
-    public void insertBoard(HttpServletRequest request, Principal principal) throws Exception {
+    public long insertBoard(HttpServletRequest request, Principal principal) throws Exception {
       log.info("service insert Board");
         /**
          * 글 제목
@@ -165,8 +165,10 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
 //            hierarchicalBoardRepository.save(hierarchicalBoard);
             log.info("Board insertion success");
+            return boardNo;
         }catch (Exception e){
             log.info("Board insertion failure");
+            return -1;
         }
 
 
@@ -177,7 +179,7 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
     public HierarchicalBoardModifyDTO getModifyData(long boardNo, Principal principal) {
         HierarchicalBoardModifyDTO dto;
 
-        if(principal == null || !principal.getName().equals(hierarchicalBoardRepository.checkWriter(boardNo)))
+        if(principal == null || checkWriter(boardNo, principal))
             dto = null;
         else{
             dto = hierarchicalBoardRepository.getModifyData(boardNo);
@@ -234,13 +236,25 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
 
 
     @Override
-    public void deleteBoard(HierarchicalBoard hierarchicalBoard) {
+    public long deleteBoard(long boardNo, Principal principal) {
         log.info("delete board");
+
+        //principal == null이거나
+        // checkWriter에서 false가 오거나.
+        if(principal == null || !checkWriter(boardNo, principal)) {
+            log.info("return 0");
+            log.info("principal is null : " + (principal == null));
+            log.info("checkWriter : {}", checkWriter(boardNo, principal));
+            return 0;
+        }
+
         try{
-            hierarchicalBoardRepository.deleteById(hierarchicalBoard.getBoardNo());
+            hierarchicalBoardRepository.deleteById(boardNo);
             log.info("delete success");
+            return 1;
         }catch (Exception e){
             log.info("delete failure");
+            return -1;
         }
     }
 
@@ -257,4 +271,12 @@ public class HierarchicalBoardServiceImpl implements HierarchicalBoardService{
         return Long.parseLong(request.getParameter("boardNo"));
     }
 
+
+    boolean checkWriter(long boardNo, Principal principal) {
+
+        if(principal.getName().equals(hierarchicalBoardRepository.checkWriter(boardNo)))
+            return true;
+
+        return false;
+    }
 }

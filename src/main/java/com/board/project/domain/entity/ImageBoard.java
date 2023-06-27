@@ -10,7 +10,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @Getter
 @Builder
 public class ImageBoard {
@@ -24,15 +23,11 @@ public class ImageBoard {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    @ToString.Exclude
     private Member member;
 
     private Date imageDate;
 
     private String imageContent;
-
-    @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private final Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "imageBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude

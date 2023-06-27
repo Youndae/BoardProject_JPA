@@ -31,7 +31,7 @@ public class HierarchicalBoardRestController {
 
     //게시글 작성 처리
     @PostMapping("/boardInsert")
-    public String hierarchicalBoardInsert(HttpServletRequest request, Principal principal) throws Exception{
+    public ResponseEntity<?> hierarchicalBoardInsert(HttpServletRequest request, Principal principal) throws Exception{
         /**
          * insert 처리 후 boardList로 이동
          */
@@ -41,9 +41,19 @@ public class HierarchicalBoardRestController {
         log.info("title :  "  +request.getParameter("boardTitle"));
         log.info("content : " + request.getParameter("boardContent"));
 
-        hierarchicalBoardService.insertBoard(request, principal);
+        long boardNo = hierarchicalBoardService.insertBoard(request, principal);
 
-        return "redirect:/board/boardList";
+        HttpHeaders headers = new HttpHeaders();
+        if(boardNo != -1) {
+            headers.setLocation(URI.create("/board/boardDetail/" + boardNo));
+
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }else {
+            headers.setLocation(URI.create("/error/error"));
+
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }
+
 
     }
 
@@ -68,8 +78,9 @@ public class HierarchicalBoardRestController {
     }
 
     //게시글 삭제 처리
-    @DeleteMapping("/boardDelete")
-    public void hierarchicalBoardDelete(@RequestBody String boardNo) throws Exception{
+    @DeleteMapping("/boardDelete/{boardNo}")
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public long hierarchicalBoardDelete(@PathVariable long boardNo, Principal principal) throws Exception{
         /**
          * 삭제 처리 후 boardList로 이동
          */
@@ -78,12 +89,12 @@ public class HierarchicalBoardRestController {
 
         log.info("boardDelete no : " + boardNo);
 
-        ObjectMapper om = new ObjectMapper();
+        /*ObjectMapper om = new ObjectMapper();
         HierarchicalBoard hierarchicalBoard = om.readValue(boardNo, HierarchicalBoard.class);
 
-        log.info("boardNo : " + hierarchicalBoard.getBoardNo());
+        log.info("boardNo : " + hierarchicalBoard.getBoardNo());*/
 
-        hierarchicalBoardService.deleteBoard(hierarchicalBoard);
+        return hierarchicalBoardService.deleteBoard(boardNo, principal);
     }
 
     //게시글 답글 작성 처리

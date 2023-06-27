@@ -10,6 +10,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/paging.js}"></script>
+    <style>
+        li {
+            list-style: none;
+            float: left;
+            padding: 5px;
+        }
+        .board-list-paging .active {
+            font-weight: bold;
+            color: black;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -27,6 +39,48 @@
                 </div>
             </th:block>
         </div>
+        <div class="search">
+            <form action="/imageBoard/imageBoardList" id="search_form" method="get">
+                <select name="searchType">
+                    <option th:value="t" th:selected="${pageMaker.cri.searchType == 't'}">제목</option>
+                    <option th:value="c" th:selected="${pageMaker.cri.searchType == 'c'}">내용</option>
+                    <option th:value="u" th:selected="${pageMaker.cri.searchType == 'u'}">작성자</option>
+                    <option th:value="tc" th:selected="${pageMaker.cri.searchType == 'tc'}">제목+내용</option>
+                </select>
+                <input type="text" id="keywordInput" name="keyword" th:value="${pageMaker.cri.keyword}">
+                <button class="btn btn-outline-info btn-sm" id="searchBtn">검색</button>
+            </form>
+        </div>
+        <div class="board-list-paging">
+            <ul>
+                <th:block th:if="${pageMaker.prev}">
+                    <li>
+                        <a th:href="${pageMaker.startPage - 1}" th:text="prev"></a>
+                    </li>
+                </th:block>
+
+                <th:block th:if="${pageMaker.endPage != 0}">
+                    <th:block th:each="num : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+                        <li class="paginate_button">
+                            <a th:href="${num}" th:classappend="${num eq pageMaker.cri.pageNum} ? active : ''" th:text="${num}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${pageMaker.next}">
+                    <li>
+                        <a th:href="${pageMaker.endPage - 1}" th:text="next"></a>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+
+        <form id="pageActionForm" method="get" th:action="@{/imageBoard/imageBoardList}">
+            <input type="hidden" name="pageNum" th:value="${pageMaker.cri.pageNum}">
+            <input type="hidden" name="amount" th:value="${pageMaker.cri.imageAmount}">
+            <input type="hidden" name="searchType" th:value="${pageMaker.cri.searchType}">
+            <input type="hidden" name="keyword" th:value="${pageMaker.cri.keyword}">
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>

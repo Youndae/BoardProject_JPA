@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +66,7 @@ public class ImageBoardRestController {
 
     //이미지 게시판 수정
     @PutMapping("/imageModify")
-    public void imageBoardModify(@RequestParam(value = "files", required = false) List<MultipartFile> images
+    public long imageBoardModify(@RequestParam(value = "files", required = false) List<MultipartFile> images
                                     , @RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles
                                     , HttpServletRequest request
                                     , Principal principal) throws Exception{
@@ -75,13 +76,14 @@ public class ImageBoardRestController {
 
         log.info("rest imageModify");
 
-        imageBoardService.imageModifyCheck(images, deleteFiles, request, principal);
+        return imageBoardService.imageModifyCheck(images, deleteFiles, request, principal);
 
     }
 
     //이미지 게시판 삭제
-    @DeleteMapping("/imageDelete")
-    public void imageBoardDelete(@RequestBody String imageNo, HttpServletRequest request) throws Exception {
+    @DeleteMapping("/imageDelete/{imageNo}")
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public long imageBoardDelete(@PathVariable("imageNo") long imageNo, HttpServletRequest request, Principal principal) throws Exception {
         /**
          * imageNo 받아서 처리
          * 처리 후 imageList로 이동
@@ -91,12 +93,8 @@ public class ImageBoardRestController {
 
         log.info("imageNo : " + imageNo);
 
-        ObjectMapper om = new ObjectMapper();
-        ImageBoard imageBoard = om.readValue(imageNo, ImageBoard.class);
 
-        log.info("imageNo : " + imageBoard.getImageNo());
-
-        imageBoardService.deleteImageBoard(imageBoard.getImageNo(), request);
+        return imageBoardService.deleteImageBoard(imageNo, request, principal);
     }
 
 

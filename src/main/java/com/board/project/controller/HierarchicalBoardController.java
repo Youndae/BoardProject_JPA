@@ -58,7 +58,7 @@ public class HierarchicalBoardController {
                                     , Principal principal
                                     , @PathVariable long boardNo
                                     , @ModelAttribute("comment")Comment comment
-                                    , Criteria criteria
+                                    , Criteria cri
                                     , HttpSession session) {
         /**
          * boardNo 받아서 처리
@@ -73,8 +73,8 @@ public class HierarchicalBoardController {
         model.addAttribute("boardDetail", hierarchicalBoardRepository.findByBoardNo(boardNo));
 
         Page<BoardCommentDTO> commentDTO = commentRepository.hierarchicalCommentList(boardNo
-                                            , PageRequest.of(criteria.getPageNum() - 1
-                                                    , criteria.getBoardAmount()
+                                            , PageRequest.of(cri.getPageNum() - 1
+                                                    , cri.getBoardAmount()
                                                     , Sort.by("commentGroupNo").ascending()
                                                             .and(Sort.by("commentUpperNo").ascending())));
 
@@ -85,9 +85,7 @@ public class HierarchicalBoardController {
         else if(principal != null)
             log.info("Principal is not null " + principal.getName());*/
 
-        model.addAttribute("pageMaker", new PageDTO(criteria, commentDTO.getTotalPages()));
-
-
+        model.addAttribute("pageMaker", new PageDTO(cri, commentDTO.getTotalPages()));
 
         return "th/board/boardDetail";
     }

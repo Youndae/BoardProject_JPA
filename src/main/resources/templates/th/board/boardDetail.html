@@ -95,10 +95,12 @@
                     </li>
                 </th:block>
 
-                <th:block th:each="num: ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-                    <li class="paginate_button">
-                        <a th:href="${num}" th:classappend="${num eq pageMaker.cri.pageNum} ? active : ''" th:text="${num}"></a>
-                    </li>
+                <th:block th:if="${pageMaker.endPage != 0}">
+                    <th:block th:each="num: ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+                        <li class="paginate_button">
+                            <a th:href="${num}" th:classappend="${num eq pageMaker.cri.pageNum} ? active : ''" th:text="${num}"></a>
+                        </li>
+                    </th:block>
                 </th:block>
 
                 <th:block th:if="${pageMaker.next}">

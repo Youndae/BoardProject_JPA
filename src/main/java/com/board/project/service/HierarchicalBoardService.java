@@ -15,11 +15,11 @@ public interface HierarchicalBoardService {
 
     HierarchicalBoardModifyDTO getModifyData(long boardNo, Principal principal);
 
-    void insertBoard(HttpServletRequest request, Principal principal) throws Exception;
+    long insertBoard(HttpServletRequest request, Principal principal) throws Exception;
 
     void insertBoardReply(HttpServletRequest request, Principal principal) throws Exception;
 
-    void deleteBoard(HierarchicalBoard hierarchicalBoard);
+    long deleteBoard(long boardNo, Principal principal);
 
     long boardModify(HttpServletRequest request);
 }

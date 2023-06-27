@@ -200,17 +200,13 @@ $(function(){
 
 $(function(){
     $("#delete").click(function(){
-        var delData = {
-            imageNo : $("#imageNo").val()
-        };
-        console.log("imageNo : " + delData.toString());
 
-        delData = JSON.stringify(delData);
+        var imageNo = $("#imageNo").val();
+
 
         $.ajax({
-            url: '/imageBoard/imageDelete',
+            url: '/imageBoard/imageDelete/' + imageNo,
             method: 'delete',
-            data: delData,
             beforeSend: function(xhr){
                 xhr.setRequestHeader(header, token);
             },
@@ -219,6 +215,8 @@ $(function(){
                     alert("오류가 발생했습니다 다시 시도해주세요.\n 문제가 계속되면 관리자에게 문의해주세요.");
                 }else if(result == 1){
                     location.href='/imageBoard/imageBoardList';
+                }else if(result == 0){
+                    alert("처리할 수 없는 요청입니다.\n 문제가 계속되면 관리자에게 문의해주세요.");
                 }
             },
             error: function(request, status, error){

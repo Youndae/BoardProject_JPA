@@ -1,10 +1,12 @@
 package com.board.project.repository;
 
+import com.board.project.domain.dto.BoardCommentDTO;
 import com.board.project.domain.entity.Comment;
 import com.board.project.domain.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -45,7 +47,7 @@ class CommentRepositoryTest {
 
     @Test
     void commentTest(){
-        long boardNo = 99988L;
+        long boardNo = 100018L;
         int pageNum = 0;
         int amount = 20;
 
@@ -57,12 +59,12 @@ class CommentRepositoryTest {
 
 //        repository.commentTest2(boardNo);
 
-        commentRepository.hierarchicalCommentList(boardNo, PageRequest.of(pageNum, amount
+        Page<BoardCommentDTO> dto = commentRepository.hierarchicalCommentList(boardNo, PageRequest.of(pageNum, amount
                     ,Sort.by("commentGroupNo").ascending()
                         .and(Sort.by("commentUpperNo").ascending())));
 
 
-
+        System.out.println(dto.getTotalPages());
 
     }
 
@@ -77,7 +79,7 @@ class CommentRepositoryTest {
         Member member = new Member();
         member.setUserId("coco");
 
-        Comment comment = Comment.builder()
+        /*Comment comment = Comment.builder()
                 .member(member)
                 .commentNo(maxNo)
                 .commentContent("testContent")
@@ -88,7 +90,7 @@ class CommentRepositoryTest {
                 .commentDate(Date.valueOf(LocalDate.now()))
                 .build();
 
-        commentRepository.save(comment);
+        commentRepository.save(comment);*/
 
 
     }
@@ -100,7 +102,7 @@ class CommentRepositoryTest {
         member.setUserId("coco");
         long commentNo = commentRepository.saveAndFlush(Comment.builder().member(member).commentContent("testContent")
                 .commentDate(Date.valueOf(LocalDate.now())).commentGroupNo(50L).build()).getCommentNo();
-
+/*
         System.out.println("-------------------------------------------------");
 
         System.out.println("commentNo : " + commentNo);
@@ -115,7 +117,7 @@ class CommentRepositoryTest {
 
         System.out.println("----------------------------------------------");
 
-        commentRepository.save(comment);
+        commentRepository.save(comment);*/
 
 
     }

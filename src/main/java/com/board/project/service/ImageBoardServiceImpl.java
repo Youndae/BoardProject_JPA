@@ -1,5 +1,8 @@
 package com.board.project.service;
 
+import com.board.project.domain.dto.ImageBoardDTO;
+import com.board.project.domain.dto.ImageBoardModifyDTO;
+import com.board.project.domain.entity.Criteria;
 import com.board.project.domain.entity.ImageBoard;
 import com.board.project.domain.entity.ImageData;
 import com.board.project.properties.ImageSizeProperties;
@@ -7,6 +10,9 @@ import com.board.project.repository.ImageBoardRepository;
 import com.board.project.repository.ImageDataRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +40,63 @@ public class ImageBoardServiceImpl implements ImageBoardService{
     private PrincipalService principalService;
 
     private static long sizeSum = 0;
+
+    //이미지 게시판 리스트
+    @Override
+    public Page<ImageBoardDTO> getImageList(Criteria cri) {
+
+        String keyword = null;
+
+        if(cri.getKeyword() != null)
+            keyword = "%" + cri.getKeyword() + "%";
+
+        Page<ImageBoardDTO> dto;
+
+        if(cri.getKeyword() == null || cri.getKeyword() == ""){//default
+            dto =
+                    imageBoardRepository.getImageBoardList(
+                        PageRequest.of(cri.getPageNum() - 1
+                                , cri.getImageAmount()
+                                , Sort.by("imageNo").descending())
+            );
+        }else if(cri.getSearchType().equals("t")){//제목 검색
+            dto =
+                    imageBoardRepository.getImageBoardSearchTitle(
+                        keyword
+                        , PageRequest.of(cri.getPageNum() - 1
+                                , cri.getImageAmount()
+                                , Sort.by("imageNo").descending())
+            );
+        }else if(cri.getSearchType().equals("c")){//내용 검색
+            dto =
+                    imageBoardRepository.getImageBoardSearchContent(
+                        keyword
+                        , PageRequest.of(cri.getPageNum() - 1
+                                , cri.getImageAmount()
+                                , Sort.by("imageNo").descending())
+            );
+        }else if(cri.getSearchType().equals("u")){//작성자 검색
+            dto =
+                    imageBoardRepository.getImageBoardSearchWriter(
+                        keyword
+                        , PageRequest.of(cri.getPageNum() - 1
+                                , cri.getImageAmount()
+                                , Sort.by("imageNo").descending())
+            );
+        }else if(cri.getSearchType().equals("tc")){//제목 + 내용 검색
+            dto =
+                    imageBoardRepository.getImageBoardSearchTitleAndContent(
+                        keyword
+                        , PageRequest.of(cri.getPageNum() - 1
+                                , cri.getImageAmount()
+                                , Sort.by("imageNo").descending())
+            );
+        }else{
+            dto = null;
+        }
+
+        return dto;
+    }
 
     //이미지파일 사이즈 체크
     public long imageSizeCheck(List<MultipartFile> images) throws Exception {
@@ -134,16 +197,16 @@ public class ImageBoardServiceImpl implements ImageBoardService{
             log.info("modify exception");
             return -1;
         }
-
-
-
     }
 
     @Override
-    public long deleteImageBoard(long imageNo, HttpServletRequest request) throws Exception {
+    public long deleteImageBoard(long imageNo, HttpServletRequest request, Principal principal) throws Exception {
         log.info("delete imageBoard");
 
         log.info("delete imageNo : " + imageNo);
+
+        if(principal == null || !checkWriter(imageNo, principal))
+            return 0;
 
         try{
             List<String> deleteFileName = imageDataRepository.deleteImageDataList(imageNo);
@@ -158,9 +221,15 @@ public class ImageBoardServiceImpl implements ImageBoardService{
             return -1;
         }
 
+    }
 
+    @Override
+    public ImageBoardModifyDTO getImageModifyData(long imageNo, Principal principal) {
 
-
+        if(principal == null || !checkWriter(imageNo, principal))
+            return null;
+        else
+            return imageBoardRepository.modifyImageDetail(imageNo);
     }
 
     //이미지 파일 저장 및 ImageData save
@@ -219,5 +288,15 @@ public class ImageBoardServiceImpl implements ImageBoardService{
             e.printStackTrace();
         }
 
+    }
+
+
+    //이미지게시판 사용자, 작성자 체크
+    boolean checkWriter(long imageNo, Principal principal){
+
+        if(principal.getName().equals(imageBoardRepository.checkWriter(imageNo)))
+            return true;
+
+        return false;
     }
 }

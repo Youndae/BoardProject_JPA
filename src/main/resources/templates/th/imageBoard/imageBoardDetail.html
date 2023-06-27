@@ -14,45 +14,13 @@
     <script type="text/javascript" th:src="@{/js/imageBoard.js}"></script>
     <script type="text/javascript" th:src="@{/js/comment.js}"></script>
     <script type="text/javascript" th:src="@{/js/paging.js}"></script>
-    <!--<script>
-        var token = $("meta[name='_csrf']").attr('content');
-        var header = $("meta[name='_csrf_header']").attr('content');
-        $(function(){
-            $("#modify").click(function(){
-                var imageNo = $("#imageNo").val();
-
-                location.href="/imageBoard/imageBoardModify/"+imageNo;
-            })
-        })
-
-        $(function(){
-            $("#delete").click(function(){
-                var delData = {
-                    imageNo : $("#imageNo").val()
-                };
-                console.log("imageNo : " + delData.toString());
-
-                delData = JSON.stringify(delData);
-
-                $.ajax({
-                    url: '/imageBoard/imageDelete',
-                    method: 'delete',
-                    data: delData,
-                    beforeSend: function(xhr){
-                        xhr.setRequestHeader(header, token);
-                    },
-                    success: function(data){
-                        console.log("success");
-                    },
-                    error: function(request, status, error){
-                        alert("code : " + request.status + "\n"
-                            + "message : " + request.responseText + "\n"
-                            + "error : " + error);
-                    }
-                })
-            })
-        })
-    </script>-->
+    <style>
+        li {
+            list-style: none;
+            float: left;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -100,12 +68,12 @@
                     <table class="table table-hover">
                         <tr>
                             <td>
-                                <p th:text="${clist.member.getUserId()}">
+                                <p th:text="${clist.userId}">
                                 <p th:utext="${clist.commentContent}"></p>
                                 <button class="btn btn-outline-info btn-sm" id="cReply" type="button"
                                         onclick="cReply(this)" th:value="${clist.commentNo}">답글
                                 </button>
-                                <th:block th:if="${session.get('userId')} eq ${clist.member.getUserId()}">
+                                <th:block th:if="${session.get('userId')} eq ${clist.userId}">
                                     <button class="btn btn-outline-info btn-sm" id="cDel" type="button"
                                             onclick="cDel(this)" th:value="${clist.commentNo}">삭제
                                     </button>
@@ -129,10 +97,12 @@
                     </li>
                 </th:block>
 
-                <th:block th:each="num: ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-                    <li class="paginate_button">
-                        <a th:href="${num}" th:classappend="${num eq pageMaker.cri.pageNum} ? active : ''" th:text="${num}"></a>
-                    </li>
+                <th:block th:if="${pageMaker.endPage != 0}">
+                    <th:block th:each="num: ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+                        <li class="paginate_button">
+                            <a th:href="${num}" th:classappend="${num eq pageMaker.cri.pageNum} ? active : ''" th:text="${num}"></a>
+                        </li>
+                    </th:block>
                 </th:block>
 
                 <th:block th:if="${pageMaker.next}">
@@ -145,7 +115,7 @@
 
         <form th:action="@{/imageBoard/imageBoardDetail/{imageNo}(imageNo=${detail[0].imageNo})}" id="pageActionForm" method="get">
             <input type="hidden" name="pageNum" th:value="${pageMaker.cri.pageNum}">
-            <input type="hidden" name="amount" th:value="${pageMaker.cri.amount}">
+            <input type="hidden" name="amount" th:value="${pageMaker.cri.imageAmount}">
         </form>
     </div>
 </div>
