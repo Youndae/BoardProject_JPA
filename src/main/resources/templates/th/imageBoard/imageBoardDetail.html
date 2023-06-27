@@ -14,7 +14,7 @@
     <script type="text/javascript" th:src="@{/js/imageBoard.js}"></script>
     <script type="text/javascript" th:src="@{/js/comment.js}"></script>
     <script type="text/javascript" th:src="@{/js/paging.js}"></script>
-    <link rel="stylesheet" th:src="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/paging.css}">
 </head>
 <body>
 <div layout:fragment="content">
@@ -50,7 +50,7 @@
         </div>
         <input type="hidden" id="imageNo" name="imageNo" th:value="${detail[0].imageNo}">
 
-        <form id="commentFrm" method="post">
+        <form id="commentFrm" method="post" style="margin-bottom: 30px">
             <div>
                 <input type="text" id="commentContent" name="commentContent" placeholder="댓글을 작성해주세요">
                 <button class="btn btn-outline-info btn-sm" id="commentInsert" type="button">작성</button>
@@ -62,8 +62,31 @@
                     <table class="table table-hover">
                         <tr>
                             <td>
-                                <p th:text="${clist.userId}">
-                                <p th:utext="${clist.commentContent}"></p>
+                                <th:block th:if="${clist.commentIndent} eq 0">
+                                    <span class="comment_userId" th:text="${clist.userId}"/>
+                                    <span class="comment_date" th:text="${clist.commentDate}"/>
+                                    <p class="comment_content" th:utext="${clist.commentContent}"></p>
+                                </th:block>
+                                <th:block th:if="${clist.commentIndent} eq 1">
+                                    <span class="comment_userId indent_size_1" th:text="${clist.userId}"/>
+                                    <span class="comment_date indent_size_1" th:text="${clist.commentDate}"/>
+                                    <p class="comment_content indent_size_1" th:utext="${clist.commentContent}"></p>
+                                </th:block>
+                                <th:block th:if="${clist.commentIndent} eq 2">
+                                    <span class="comment_userId indent_size_2" th:text="${clist.userId}"/>
+                                    <span class="comment_date indent_size_2" th:text="${clist.commentDate}"/>
+                                    <p class="comment_content indent_size_2" th:utext="${clist.commentContent}"></p>
+                                </th:block>
+                                <th:block th:if="${clist.commentIndent} eq 3">
+                                    <span class="comment_userId indent_size_3" th:text="${clist.userId}"/>
+                                    <span class="comment_date indent_size_3" th:text="${clist.commentDate}"/>
+                                    <p class="comment_content indent_size_3" th:utext="${clist.commentContent}"></p>
+                                </th:block>
+                                <th:block th:if="${clist.commentIndent} eq 4">
+                                    <span class="comment_userId indent_size_4" th:text="${clist.userId}"/>
+                                    <span class="comment_date indent_size_4" th:text="${clist.commentDate}"/>
+                                    <p class="comment_content indent_size_4" th:utext="${clist.commentContent}"></p>
+                                </th:block>
                                 <button class="btn btn-outline-info btn-sm" id="cReply" type="button"
                                         onclick="cReply(this)" th:value="${clist.commentNo}">답글
                                 </button>
@@ -72,7 +95,7 @@
                                             onclick="cDel(this)" th:value="${clist.commentNo}">삭제
                                     </button>
                                 </th:block>
-                                </p>
+
                             </td>
                             <input type="hidden" id="commentNo" th:value="${clist.commentNo}">
                             <input type="hidden" class="commentUpperNo" th:value="${clist.commentUpperNo}">
@@ -86,8 +109,8 @@
         <div>
             <ul>
                 <th:block th:if="${pageMaker.prev}">
-                    <li>
-                        <a th:href="${pageMaker.startPage - 1}">Prev</a>
+                    <li class="paginate_button">
+                        <a th:href="${pageMaker.startPage - 1}" th:text="prev"></a>
                     </li>
                 </th:block>
 
@@ -100,8 +123,8 @@
                 </th:block>
 
                 <th:block th:if="${pageMaker.next}">
-                    <li>
-                        <a th:href="${pageMaker.endPage + 1}" th:text="Next"></a>
+                    <li class="paginate_button">
+                        <a th:href="${pageMaker.endPage + 1}" th:text="next"></a>
                     </li>
                 </th:block>
             </ul>

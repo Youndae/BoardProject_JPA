@@ -11,8 +11,7 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-3.3.1.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/paging.js}"></script>
-    <link rel="stylesheet" th:src="@{/css/paging.css}">
-    <link rel="stylesheet" th:src="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/paging.css}">
 </head>
 <body>
 <div layout:fragment="content">
@@ -45,7 +44,7 @@
         <div class="board-list-paging">
             <ul>
                 <th:block th:if="${pageMaker.prev}">
-                    <li>
+                    <li class="paginate_button">
                         <a th:href="${pageMaker.startPage - 1}" th:text="prev"></a>
                     </li>
                 </th:block>
@@ -59,8 +58,8 @@
                 </th:block>
 
                 <th:block th:if="${pageMaker.next}">
-                    <li>
-                        <a th:href="${pageMaker.endPage - 1}" th:text="next"></a>
+                    <li class="paginate_button">
+                        <a th:href="${pageMaker.endPage + 1}" th:text="next"></a>
                     </li>
                 </th:block>
             </ul>

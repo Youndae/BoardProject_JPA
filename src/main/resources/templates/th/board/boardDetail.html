@@ -14,8 +14,7 @@
     <script type="text/javascript" th:src="@{/js/hierarchicalBoard.js}"></script>
     <script type="text/javascript" th:src="@{/js/comment.js}"></script>
     <script type="text/javascript" th:src="@{/js/paging.js}"></script>
-    <link rel="stylesheet" th:src="@{/css/nav.css}">
-    <link rel="stylesheet" th:src="@{/css/paging.css}">
+    <link rel="stylesheet" th:href="@{/css/paging.css}">
 </head>
 <body>
 <div layout:fragment="content">
@@ -61,17 +60,17 @@
                     <table class="table table-hover">
                         <tr>
                             <td>
-                                <p th:text="${clist.userId}">
-                                    <p th:utext="${clist.commentContent}"></p>
-                                    <button class="btn btn-outline-info btn-sm" id="cReply" type="button"
-                                            onclick="cReply(this)" th:value="${clist.commentNo}">답글
+                                <span class="comment_userId" th:text="${clist.userId}"/>
+                                <span class="comment_date" th:text="${clist.commentDate}"/>
+                                <p class="comment_content" th:utext="${clist.commentContent}"></p>
+                                <button class="btn btn-outline-info btn-sm" id="cReply" type="button"
+                                        onclick="cReply(this)" th:value="${clist.commentNo}">답글
+                                </button>
+                                <th:block th:if="${session.get('userId')} eq ${clist.userId}">
+                                    <button class="btn btn-outline-info btn-sm" id="cDel" type="button"
+                                            onclick="cDel(this)" th:value="${clist.commentNo}">삭제
                                     </button>
-                                    <th:block th:if="${session.get('userId')} eq ${clist.userId}">
-                                        <button class="btn btn-outline-info btn-sm" id="cDel" type="button"
-                                                onclick="cDel(this)" th:value="${clist.commentNo}">삭제
-                                        </button>
-                                    </th:block>
-                                </p>
+                                </th:block>
                             </td>
                             <input type="hidden" id="commentNo" th:value="${clist.commentNo}">
                             <input type="hidden" class="commentUpperNo" th:value="${clist.commentUpperNo}">
@@ -85,8 +84,8 @@
         <div>
             <ul>
                 <th:block th:if="${pageMaker.prev}">
-                    <li>
-                        <a th:href="${pageMaker.startPage - 1}">Prev</a>
+                    <li class="paginate_button">
+                        <a th:href="${pageMaker.startPage - 1}" th:text="prev"></a>
                     </li>
                 </th:block>
 
@@ -99,8 +98,8 @@
                 </th:block>
 
                 <th:block th:if="${pageMaker.next}">
-                    <li>
-                        <a th:href="${pageMaker.endPage + 1}" th:text="Next"></a>
+                    <li class="paginate_button">
+                        <a th:href="${pageMaker.endPage + 1}" th:text="next"></a>
                     </li>
                 </th:block>
             </ul>
