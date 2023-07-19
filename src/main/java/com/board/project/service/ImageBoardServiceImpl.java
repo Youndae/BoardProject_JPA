@@ -137,31 +137,29 @@ public class ImageBoardServiceImpl implements ImageBoardService{
         log.info("imageTitle : " + request.getParameter("imageTitle"));
         log.info("imageContent : " + request.getParameter("imageContent"));
 
-            try{
-                ImageBoard imageBoard = ImageBoard.builder()
-                        .member(principalService.checkPrincipal(principal))
-                        .imageTitle(request.getParameter("imageTitle"))
-                        .imageContent(request.getParameter("imageContent"))
-                        .imageDate(Date.valueOf(LocalDate.now()))
-                        .build();
+        try{
+            ImageBoard imageBoard = ImageBoard.builder()
+                    .member(principalService.checkPrincipal(principal))
+                    .imageTitle(request.getParameter("imageTitle"))
+                    .imageContent(request.getParameter("imageContent"))
+                    .imageDate(Date.valueOf(LocalDate.now()))
+                    .build();
 
-                imageInsert(images, request, 1, imageBoard);
+            imageInsert(images, request, 1, imageBoard);
 
-                return imageBoardRepository.save(imageBoard).getImageNo();
+            return imageBoardRepository.save(imageBoard).getImageNo();
 
-            }catch (Exception e){
-                log.info("insertion exception!!");
-                return -1;
-            }
+        }catch (Exception e){
+            log.info("insertion exception!!");
+            return -1;
+        }
 
     }
 
     @Override
-    public long imageModifyCheck(List<MultipartFile> images, List<String> deleteFiles, HttpServletRequest request, Principal principal) throws Exception {
+    public long imageModifyCheck(List<MultipartFile> images, List<String> deleteFiles
+                                , HttpServletRequest request, Principal principal) throws Exception {
         log.info("imageModifyCheck");
-
-        log.info("imageTitle : " + request.getParameter("imageTitle"));
-        log.info("imageContent : " + request.getParameter("imageContent"));
 
         try{
             if(images != null){

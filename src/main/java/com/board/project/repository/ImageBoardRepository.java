@@ -31,9 +31,8 @@ public interface ImageBoardRepository extends JpaRepository<ImageBoard, Long> {
             "ImageData id " +
             "ON ib.imageNo = id.imageBoard.imageNo " +
             "GROUP BY ib.imageNo"
-    , countQuery = "SELECT c.contentCount " +
-            "FROM CountTable c " +
-            "WHERE c.boardName = 'imageBoard'")
+    , countQuery = "SELECT count(distinct(ib.imageNo)) " +
+            "FROM ImageBoard ib")
     Page<ImageBoardDTO> getImageBoardList(Pageable pageable);
 
 

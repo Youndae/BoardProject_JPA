@@ -58,8 +58,6 @@ public class ImageBoardRestController {
          */
         log.info("rest imageInsert");
 
-
-
         return imageBoardService.imageInsertCheck(images, request, principal);
 
     }

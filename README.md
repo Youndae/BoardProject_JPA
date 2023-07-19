@@ -287,3 +287,9 @@
 >> 댓글 및 계층형 게시판 css 수정.   
 >> navbar css 분리해서 수정.   
 >> hierarchicalBoard.css로 계층형 처리하던 css paging.css로 통합 후 삭제.
+> 
+> 
+> 23/07/19
+>> count 쿼리 성능저하로 인해 생성했던 countTable 삭제.   
+>> 그로인해 CountTable Entity도 삭제.
+>> 검색 쿼리의 countQuery는 두고 전체 리스트의 countQuery만 count(distinct(PK)) 형태로 수정.

@@ -25,9 +25,8 @@ public interface HierarchicalBoardRepository extends JpaRepository<HierarchicalB
             ", b.boardIndent" +
             ", b.boardUpperNo) " +
             "FROM HierarchicalBoard b"
-    , countQuery = "SELECT c.contentCount " +
-            "FROM CountTable c " +
-            "WHERE c.boardName = 'hierarchicalboard'")
+    , countQuery = "SELECT count(distinct(b.boardNo)) " +
+            "FROM HierarchicalBoard b")
     Page<HierarchicalBoardDTO> hierarchicalBoardList(Pageable pageable);
 
 
